@@ -9,6 +9,7 @@ urlpatterns = [
     path('', admin.site.urls),
     path("select2/", include("django_select2.urls")),
     url(r"^api-auth/", include("rest_framework.urls")),
+    path("api/", include("accounts.urls")),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

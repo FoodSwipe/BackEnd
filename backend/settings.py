@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "phonenumber_field",
     "corsheaders",
+
+    # constructed apps
+    "accounts"
 ]
 
 # Rest framework settings
@@ -90,7 +93,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["accounts"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -204,4 +207,8 @@ SELECT2_CACHE_BACKEND = "select2"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "127.0.0.1"
 EMAIL_PORT = 1025
-EMAIL_HOST_USER = 'foo@bar.com'
+EMAIL_HOST_USER = 'foo@swipe.com'
+
+# File extension rule
+ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG"]
+MAX_UPLOAD_IMAGE_SIZE = 70000
