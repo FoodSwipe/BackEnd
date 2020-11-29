@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     "corsheaders",
 
     # constructed apps
-    "accounts"
+    "accounts",
+    "item"
 ]
 
 # Rest framework settings
@@ -210,5 +211,5 @@ EMAIL_PORT = 1025
 EMAIL_HOST_USER = 'foo@swipe.com'
 
 # File extension rule
-ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG"]
+ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG", "webp"]
 MAX_UPLOAD_IMAGE_SIZE = 70000
