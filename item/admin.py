@@ -11,6 +11,7 @@ class ItemTypeAdmin(admin.ModelAdmin):
 class MenuItemAdmin(admin.ModelAdmin):
     list_display = (
         "name",
+        "menu_item_group",
         "price",
         "ingredients",
         "is_veg",
@@ -23,6 +24,7 @@ class MenuItemAdmin(admin.ModelAdmin):
     )
     ordering = (
         "name",
+        "menu_item_group",
         "price",
         "is_veg",
         "is_available",
@@ -32,8 +34,14 @@ class MenuItemAdmin(admin.ModelAdmin):
         "updated_at",
         "updated_by"
     )
-    search_fields = ("name", "ingredients")
+    list_filter = (
+        "is_veg",
+        "is_available",
+        "menu_item_group",
+    )
+    search_fields = ("name", "menu_item_group__name", "ingredients")
     date_hierarchy = "created_at"
+    autocomplete_fields = ("menu_item_group",)
     fieldsets = (
         ("Item Information", {
             "classes": ("wide", "extrapretty"),
@@ -41,6 +49,7 @@ class MenuItemAdmin(admin.ModelAdmin):
                 "name",
                 "description",
                 "ingredients",
+                "menu_item_group",
                 "weight",
                 "calorie",
                 "is_veg",
@@ -61,7 +70,8 @@ class MenuItemAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
-        obj.updated_by = request.user
+        else:
+            obj.updated_by = request.user
         super().save_model(request, obj, form, change)
 
 

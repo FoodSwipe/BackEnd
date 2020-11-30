@@ -8,6 +8,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 
 from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
+from item_group.models import MenuItemGroup
 
 
 def upload_menu_type_badge_to(instance, filename):
@@ -69,6 +70,14 @@ class MenuItem(models.Model):
         related_name="MenuItemModifier",
         on_delete=models.SET_NULL,
         null=True
+    )
+
+    menu_item_group = models.ForeignKey(
+        MenuItemGroup,
+        null=True,
+        blank=True,
+        related_name="MenuItemGroup",
+        on_delete=models.SET_NULL
     )
 
     class Meta:
