@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     # constructed apps
     "accounts",
     "item",
-    "item_group"
+    "item_group",
+    "cart"
 ]
 
 # Rest framework settings
