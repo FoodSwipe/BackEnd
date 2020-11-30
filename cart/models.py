@@ -5,6 +5,8 @@ from item.models import MenuItem
 
 
 class Order(models.Model):
+    custom_location = models.CharField(max_length=512, blank=True, null=True)
+    is_delivered = models.BooleanField(default=False)
     total_price = models.DecimalField(default=0, decimal_places=2, max_digits=8, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)

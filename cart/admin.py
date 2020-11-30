@@ -6,18 +6,21 @@ from cart.models import Order, CartItem
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "created_by",
+        "custom_location",
         "total_price",
         "created_at",
         "updated_at",
     )
     ordering = (
         "created_by",
+        "custom_location",
         "total_price",
         "created_at",
         "updated_at",
     )
+    list_filter = ("created_at",)
     date_hierarchy = "created_at"
-    search_fields = ("created_by__username",)
+    search_fields = ("created_by__username", "custom_location",)
     list_per_page = 10
 
     def save_model(self, request, obj, form, change):

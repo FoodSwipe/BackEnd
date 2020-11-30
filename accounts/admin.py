@@ -11,6 +11,14 @@ class UserAdmin(BaseUserAdmin):
         "username", "email", "first_name", "last_name",
         "is_superuser", "is_staff", "date_joined"
     )
+    ordering = (
+        "username", "email", "first_name", "last_name",
+        "is_superuser", "is_staff", "date_joined"
+    )
+    sortable_by = ("username", "first_name", "last_name")
+    search_fields = ("username", "email", "first_name", "last_name")
+    list_filter = ("is_superuser", "is_staff", "date_joined")
+    date_hierarchy = "date_joined"
 
     list_per_page = 10
 
@@ -28,8 +36,10 @@ class ProfileAdmin(admin.ModelAdmin):
     )
     list_filter = (
         ("current_city", admin.AllValuesFieldListFilter),
+        ("user__date_joined", admin.DateFieldListFilter),
         ("last_updated", admin.DateFieldListFilter),
     )
+    date_hierarchy = "user__date_joined"
     search_fields = (
         "user__username", "contacts",
         "current_city", "address",
@@ -56,7 +66,8 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(ProfileImage)
 class ProfileImageAdmin(admin.ModelAdmin):
     list_display = ("profile", "image")
-    list_filter = ("profile",)
+    list_filter = ("profile", "profile__user__date_joined")
+    date_hierarchy = "profile__user__date_joined"
 
     fieldsets = (
         ("Profile Image Information", {
@@ -76,6 +87,8 @@ class ProfileImageAdmin(admin.ModelAdmin):
 class ResetPasswordCodeAdmin(admin.ModelAdmin):
     list_display = ("user", "code")
     list_per_page = 10
+    date_hierarchy = "user__date_joined"
+    list_filter = ("user__date_joined",)
 
 
 admin.site.unregister(get_user_model())

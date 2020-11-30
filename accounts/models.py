@@ -43,8 +43,8 @@ class Profile(models.Model):
         return self.user.username + ' Profile'
 
     class Meta:
-        verbose_name = "Follower Profile"
-        verbose_name_plural = "Follower Profiles"
+        verbose_name = "Customer Profile"
+        verbose_name_plural = "Customer Profiles"
 
 
 @receiver(post_save, sender=get_user_model())
@@ -72,8 +72,8 @@ class ProfileImage(models.Model):
     )
 
     class Meta:
-        verbose_name = "Follower Profile Image"
-        verbose_name_plural = "Follower Profile Images"
+        verbose_name = "Customer Profile Image"
+        verbose_name_plural = "Customer Profile Images"
 
     def __str__(self):
         return self.profile.user.username

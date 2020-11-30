@@ -34,10 +34,12 @@ class MenuItemAdmin(admin.ModelAdmin):
         "updated_at",
         "updated_by"
     )
+    sortable_by = ("name",)
     list_filter = (
         "is_veg",
         "is_available",
         "menu_item_group",
+        "created_at"
     )
     search_fields = ("name", "menu_item_group__name", "ingredients")
     date_hierarchy = "created_at"
@@ -78,6 +80,7 @@ class MenuItemAdmin(admin.ModelAdmin):
 class MenuItemImageAdmin(admin.ModelAdmin):
     list_display = ("menu_item", "image")
     list_per_page = 10
+    list_filter = ("menu_item__created_at",)
     ordering = ("menu_item",)
     search_fields = ("menu_item__name",)
     date_hierarchy = "menu_item__created_at"
@@ -93,7 +96,8 @@ class MenuItemTypeAdmin(admin.ModelAdmin):
     ordering = ("menu_item",)
     search_fields = ("menu_item__name",)
 
-    list_filter = ("item_type",)
+    list_filter = ("item_type", "menu_item__created_at")
+    date_hierarchy = "menu_item__created_at"
 
     filter_horizontal = ("item_type",)
     date_hierarchy = "menu_item__created_at"
