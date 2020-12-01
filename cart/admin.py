@@ -38,6 +38,7 @@ class CartAdmin(admin.ModelAdmin):
         "quantity",
         "created_at",
         "created_by",
+        "updated_at"
     )
     ordering = (
         "order",
@@ -45,6 +46,7 @@ class CartAdmin(admin.ModelAdmin):
         "quantity",
         "created_at",
         "created_by",
+        "updated_at"
     )
     date_hierarchy = "created_at"
     search_fields = ("item__name", "created_by__username")
