@@ -215,4 +215,4 @@ EMAIL_HOST_USER = 'foo@swipe.com'
 
 # File extension rule
 ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG", "webp"]
-MAX_UPLOAD_IMAGE_SIZE = 70000
+MAX_UPLOAD_IMAGE_SIZE = 20000

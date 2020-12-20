@@ -6,7 +6,66 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer
+from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer, RegisterUserSerializer, \
+    AddUserSerializer, UpdateUserSerializer
+
+
+class RegisterUser(APIView):
+    @staticmethod
+    def post(request):
+        """
+        Creates a brand new user-member(x)
+        """
+        serializer = RegisterUserSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(UserCreateSerializer(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddUser(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    @staticmethod
+    def post(request):
+        """
+        Creates a brand new user-member(x)
+        """
+        serializer = AddUserSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(UserCreateSerializer(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateUserWithProfile(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    @staticmethod
+    def get_object(pk):
+        return get_object_or_404(get_user_model(), pk=pk)
+
+    def put(self, request, pk):
+        user = self.get_object(pk=pk)
+        serializer = UpdateUserSerializer(
+            user, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "User updated successfully.",
+                "data": UserCreateSerializer(self.get_object(pk)).data
+            }, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListUser(APIView):
@@ -14,8 +73,8 @@ class ListUser(APIView):
     View to list all users in the system.
     * Only staff users are able to access this view.
     """
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAdminUser]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
 
     @staticmethod
     def get(request):
@@ -45,8 +104,8 @@ class UserDetail(APIView):
     User Detailed Operations
     * Only staff users are able to access this view.
     """
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAdminUser]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
 
     @staticmethod
     def get_object(pk):
@@ -95,4 +154,46 @@ class UserDetail(APIView):
         user.delete()
         return Response({
             "message": "User deleted successfully."
+        }, status=status.HTTP_204_NO_CONTENT)
+
+
+class ToggleSuperUserStatus(APIView):
+    """
+    User Detailed Operations
+    * Only staff users are able to access this view.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    @staticmethod
+    def get_object(pk):
+        return get_object_or_404(get_user_model(), pk=pk)
+
+    def post(self, request, pk):
+        user = self.get_object(pk)
+        user.is_superuser = not user.is_superuser
+        user.save()
+        return Response({
+            "message": "User superuser status toggled successfully."
+        }, status=status.HTTP_204_NO_CONTENT)
+
+
+class ToggleStaffUserStatus(APIView):
+    """
+    User Detailed Operations
+    * Only staff users are able to access this view.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    @staticmethod
+    def get_object(pk):
+        return get_object_or_404(get_user_model(), pk=pk)
+
+    def post(self, request, pk):
+        user = self.get_object(pk)
+        user.is_staff = not user.is_staff
+        user.save()
+        return Response({
+            "message": "User staff status toggled successfully."
         }, status=status.HTTP_204_NO_CONTENT)

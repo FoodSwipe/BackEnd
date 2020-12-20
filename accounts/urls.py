@@ -1,15 +1,22 @@
 from django.urls import path
 
-from accounts.views.accounts import ListUser, UserDetail
+from accounts.views.accounts import ListUser, UserDetail, RegisterUser, ToggleSuperUserStatus, ToggleStaffUserStatus, \
+    AddUser, UpdateUserWithProfile
 from accounts.views.login import LoginView, LogoutView
 from accounts.views.password import UpdatePassword, ResetPasswordRequestCode, ResetPasswordConfirm
-from accounts.views.profile import ListProfile, ProfileDetail
+from accounts.views.profile import ListProfile, ProfileDetail, ListProfiles
 
 app_name = "accounts"
 
 urlpatterns = [
+    path("register", RegisterUser.as_view(), name="register-user"),
+    path("add-user", AddUser.as_view(), name="add-user"),
+    path("user-update/<int:pk>", UpdateUserWithProfile.as_view(), name="update-user-profile"),
     path("user", ListUser.as_view(), name="users-list"),
     path("user/<int:pk>", UserDetail.as_view(), name="user-detail"),
+    path('user/<int:pk>/toggle-superuser-status', ToggleSuperUserStatus.as_view(), name="toggle-superuser-status"),
+    path('user/<int:pk>/toggle-staff-status', ToggleStaffUserStatus.as_view(), name="toggle-staff-status"),
+    path("profiles", ListProfiles.as_view(), name="list-profiles"),
     path("user/<int:pk>/profile", ListProfile.as_view(), name="profile-list"),
     path("profile/<int:pk>", ProfileDetail.as_view(), name="profile-detail"),
     path("login", LoginView.as_view(), name="swipe_login"),

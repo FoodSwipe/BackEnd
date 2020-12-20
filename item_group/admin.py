@@ -1,14 +1,12 @@
 from django.contrib import admin
 
-from item_group.models import MenuItemGroup, MenuItemGroupImage
+from item_group.models import MenuItemGroup
 
 
 class MenuItemGroupAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "description",
-        "price",
-        "discount",
         "created_at",
         "created_by",
         "updated_at",
@@ -17,8 +15,6 @@ class MenuItemGroupAdmin(admin.ModelAdmin):
     ordering = (
         "name",
         "description",
-        "price",
-        "discount",
         "created_at",
         "created_by",
         "updated_at",
@@ -32,15 +28,9 @@ class MenuItemGroupAdmin(admin.ModelAdmin):
             "fields": (
                 "name",
                 "description",
+                "image"
             )
         }),
-        ("Business Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "price",
-                "discount",
-            )
-        })
     )
     list_per_page = 10
 
@@ -51,18 +41,9 @@ class MenuItemGroupAdmin(admin.ModelAdmin):
             obj.updated_by = request.user
         super().save_model(request, obj, form, change)
 
-
-class MenuItemGroupImageAdmin(admin.ModelAdmin):
-    list_display = ("menu_item_group", "image")
-    list_per_page = 10
-    ordering = ("menu_item_group",)
-    search_fields = ("menu_item_group__name",)
-    date_hierarchy = "menu_item_group__created_at"
-
     def delete_model(self, request, obj):
         obj.image.delete()
         obj.delete()
 
 
 admin.site.register(MenuItemGroup, MenuItemGroupAdmin)
-admin.site.register(MenuItemGroupImage, MenuItemGroupImageAdmin)

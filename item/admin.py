@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from item.models import ItemType, MenuItem, MenuItemImage, MenuItemType
+from item.models import ItemType, MenuItem
 
 
 class ItemTypeAdmin(admin.ModelAdmin):
@@ -9,6 +9,7 @@ class ItemTypeAdmin(admin.ModelAdmin):
 
 
 class MenuItemAdmin(admin.ModelAdmin):
+    save_on_top = True
     list_display = (
         "name",
         "menu_item_group",
@@ -16,7 +17,6 @@ class MenuItemAdmin(admin.ModelAdmin):
         "ingredients",
         "is_veg",
         "is_available",
-        "discount",
         "created_at",
         "created_by",
         "updated_at",
@@ -28,7 +28,6 @@ class MenuItemAdmin(admin.ModelAdmin):
         "price",
         "is_veg",
         "is_available",
-        "discount",
         "created_at",
         "created_by",
         "updated_at",
@@ -41,6 +40,7 @@ class MenuItemAdmin(admin.ModelAdmin):
         "menu_item_group",
         "created_at"
     )
+    filter_horizontal = ("item_type",)
     search_fields = ("name", "menu_item_group__name", "ingredients")
     date_hierarchy = "created_at"
     autocomplete_fields = ("menu_item_group",)
@@ -55,14 +55,15 @@ class MenuItemAdmin(admin.ModelAdmin):
                 "weight",
                 "calorie",
                 "is_veg",
+                "item_type"
             )
         }),
         ("Business Information", {
             "classes": ("wide", "extrapretty"),
             "fields": (
                 "price",
-                "discount",
-                "is_available"
+                "is_available",
+                "image"
             )
         })
     )
@@ -76,34 +77,10 @@ class MenuItemAdmin(admin.ModelAdmin):
             obj.updated_by = request.user
         super().save_model(request, obj, form, change)
 
-
-class MenuItemImageAdmin(admin.ModelAdmin):
-    list_display = ("menu_item", "image")
-    list_per_page = 10
-    list_filter = ("menu_item__created_at",)
-    ordering = ("menu_item",)
-    search_fields = ("menu_item__name",)
-    date_hierarchy = "menu_item__created_at"
-
     def delete_model(self, request, obj):
         obj.image.delete()
         obj.delete()
 
 
-class MenuItemTypeAdmin(admin.ModelAdmin):
-    list_display = ("menu_item", )
-    list_per_page = 10
-    ordering = ("menu_item",)
-    search_fields = ("menu_item__name",)
-
-    list_filter = ("item_type", "menu_item__created_at")
-    date_hierarchy = "menu_item__created_at"
-
-    filter_horizontal = ("item_type",)
-    date_hierarchy = "menu_item__created_at"
-
-
 admin.site.register(ItemType, ItemTypeAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
-admin.site.register(MenuItemImage, MenuItemImageAdmin)
-admin.site.register(MenuItemType, MenuItemTypeAdmin)

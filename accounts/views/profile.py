@@ -8,11 +8,24 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from accounts.serializers.profile import ProfilePOSTSerializer, ProfileSerializer
+from utils.helper import generate_url_for_media_resource, generate_url_for_media_resources
+
+
+class ListProfiles(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def get(request):
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        serializer = generate_url_for_media_resources(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ListProfile(APIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def get(request, pk):
@@ -25,8 +38,8 @@ class ListProfile(APIView):
 
 
 class ProfileDetail(APIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def get_object(pk):

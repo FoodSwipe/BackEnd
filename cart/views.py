@@ -3,9 +3,45 @@ from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from cart.models import Order, CartItem
-from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSerializer, CartItemPOSTSerializer
+from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSerializer, CartItemPOSTSerializer, \
+    OrderCreateSerializer, OrderWithCartListSerializer
+
+
+class OrderWithCartListView(APIView):
+    @staticmethod
+    def get(request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            serializer = OrderWithCartListSerializer(
+                instance=order,
+                context={"request": request}
+            )
+            return Response({
+                "results": serializer.data
+            }, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({
+                "message": "Order not found."
+            }, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+class InitializeOrder(APIView):
+    @staticmethod
+    def post(request):
+        serializer = OrderCreateSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+        if serializer.is_valid():
+            order = serializer.save()
+            order.save()
+            return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -28,18 +64,19 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class CartItemViewSet(viewsets.ModelViewSet):
-    queryset = CartItem.objects.all()
+    queryset = CartItem.objects.all().order_by('created_at')
     serializer_class = CartItemSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.action == "create" or self.action == "update":
+        if self.action == "create" or self.action == "update" or self.action == "partial_update":
             return CartItemPOSTSerializer
         return super(CartItemViewSet, self).get_serializer_class()
 
     def destroy(self, request, *args, **kwargs):
         cart_item = self.get_object()
+        cart_item.order.total_items -= cart_item.quantity
+        cart_item.order.total_price -= cart_item.quantity * cart_item.item.price
+        cart_item.order.save()
         cart_item.delete()
         return Response({
             "message": "Cart item removed successfully."

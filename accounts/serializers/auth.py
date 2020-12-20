@@ -3,18 +3,18 @@ from rest_framework import serializers
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=64)
-    password = serializers.CharField(max_length=64)
+    username = serializers.CharField(max_length=64, required=True)
+    password = serializers.CharField(max_length=64, required=True)
 
 
 class LogoutSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=64)
+    username = serializers.CharField(max_length=64, required=True)
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(write_only=True)
-    new_password = serializers.CharField(write_only=True)
-    confirm_password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True)
+    confirm_password = serializers.CharField(write_only=True, required=True)
 
     # @staticmethod
     # def validate_new_password(password):

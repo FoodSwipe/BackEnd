@@ -11,8 +11,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfilePOSTSerializer(serializers.ModelSerializer):
-    contacts = serializers.ListField(child=serializers.IntegerField(), required=False)
-
     class Meta:
         model = Profile
         fields = "__all__"

@@ -1,15 +1,15 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from item_group.views import MenuItemGroupViewSet, MenuItemGroupImageViewSet
+from item_group.views import MenuItemGroupViewSet, MenuItemGroupsWithItemListView
 
 router = DefaultRouter()
 router.register("menu-item-group", MenuItemGroupViewSet, basename="menu-item-group")
-router.register("menu-item-group-image", MenuItemGroupImageViewSet, basename="menu-item-group-image")
 
 urlpatterns = router.urls
 
 app_name = "item_group"
 
 urlpatterns += [
-    # TODO add filter apis
+    path("item-group-with-items", MenuItemGroupsWithItemListView.as_view(), name="groups-with-items")
 ]

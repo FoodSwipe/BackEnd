@@ -2,22 +2,22 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from accounts.models import Profile, ProfileImage, ResetPasswordCode
+from accounts.models import Profile, ResetPasswordCode
 
 
 class UserAdmin(BaseUserAdmin):
     save_on_top = True
     list_display = (
         "username", "email", "first_name", "last_name",
-        "is_superuser", "is_staff", "date_joined"
+        "is_superuser", "is_staff", "is_active", "date_joined"
     )
     ordering = (
         "username", "email", "first_name", "last_name",
-        "is_superuser", "is_staff", "date_joined"
+        "is_superuser", "is_staff", "is_active", "date_joined"
     )
     sortable_by = ("username", "first_name", "last_name")
     search_fields = ("username", "email", "first_name", "last_name")
-    list_filter = ("is_superuser", "is_staff", "date_joined")
+    list_filter = ("is_superuser", "is_staff", "date_joined", "is_active")
     date_hierarchy = "date_joined"
 
     list_per_page = 10
@@ -27,22 +27,21 @@ class UserAdmin(BaseUserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = (
-        "user", "bio", "contacts", "birth_date",
-        "current_city", "address", "last_updated",
+        "user", "bio", "contact", "birth_date",
+        "address", "last_updated",
     )
     ordering = (
-        "user", "bio", "contacts", "birth_date",
-        "current_city", "address", "last_updated",
+        "user", "bio", "contact", "birth_date",
+        "address", "last_updated",
     )
     list_filter = (
-        ("current_city", admin.AllValuesFieldListFilter),
         ("user__date_joined", admin.DateFieldListFilter),
         ("last_updated", admin.DateFieldListFilter),
     )
     date_hierarchy = "user__date_joined"
     search_fields = (
-        "user__username", "contacts",
-        "current_city", "address",
+        "user__username", "contact",
+        "address",
     )
     autocomplete_fields = ["user"]
 
@@ -50,32 +49,15 @@ class ProfileAdmin(admin.ModelAdmin):
         ("Personal Information", {
             "classes": ("wide", "extrapretty"),
             "fields" : (
-                "contacts", "bio", "birth_date"
+                "contact", "bio", "birth_date", "image"
             )
         }),
         ("Location Information", {
             "classes": ("wide", "extrapretty"),
             "fields" : (
-                "current_city", "address"
+                "address",
             )
         })
-    )
-    list_per_page = 10
-
-
-@admin.register(ProfileImage)
-class ProfileImageAdmin(admin.ModelAdmin):
-    list_display = ("profile", "image")
-    list_filter = ("profile", "profile__user__date_joined")
-    date_hierarchy = "profile__user__date_joined"
-
-    fieldsets = (
-        ("Profile Image Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "profile", "image"
-            )
-        }),
     )
     list_per_page = 10
 
