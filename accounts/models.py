@@ -24,7 +24,8 @@ class Profile(models.Model):
     user = models.OneToOneField(
         get_user_model(),
         on_delete=models.CASCADE,
-        editable=False
+        editable=False,
+        related_name="profile"
     )
     bio = models.TextField(null=True, blank=True, max_length=1024)
     contact = models.PositiveBigIntegerField(unique=True, null=True)

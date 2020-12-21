@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from django.utils.timezone import now
 from rest_framework import serializers
 
 from accounts.models import Profile
@@ -144,3 +145,58 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ("username", "first_name", "last_name", "email")
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            "bio",
+            "contact",
+            "birth_date",
+            "address",
+            "last_updated",
+            "image"
+        ]
+
+
+class UserWithProfileSerializer(serializers.ModelSerializer):
+    admin = serializers.SerializerMethodField()
+    staff = serializers.SerializerMethodField()
+    last_login = serializers.SerializerMethodField()
+    date_joined = serializers.SerializerMethodField()
+    profile = ProfileSerializer(read_only=True)
+
+    @staticmethod
+    def get_admin(obj):
+        return obj.is_superuser
+
+    @staticmethod
+    def get_staff(obj):
+        return obj.is_staff
+
+    @staticmethod
+    def get_last_login(obj):
+        return '{} days ago'.format((now() - obj.last_login).days)
+
+    @staticmethod
+    def get_date_joined(obj):
+        return '{} days ago'.format((now() - obj.date_joined).days)
+
+    class Meta:
+        model = get_user_model()
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "admin",
+            "staff",
+            "date_joined",
+            "last_login",
+            "profile"
+        ]
+

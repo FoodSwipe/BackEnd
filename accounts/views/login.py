@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.serializers.auth import LoginSerializer, LogoutSerializer
-from accounts.serializers.user import UserCreateSerializer
+from accounts.serializers.user import UserCreateSerializer, UserWithProfileSerializer
+from cart.models import Order
+from cart.serializers import OrderSerializer
 
 
 class LoginView(APIView):
@@ -18,10 +20,10 @@ class LoginView(APIView):
         Login a user instance
         Provides a brand new token for a member user
         """
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            username = serializer.data['username']
-            password = serializer.data['password']
+        user_serializer = LoginSerializer(data=request.data)
+        if user_serializer.is_valid():
+            username = user_serializer.data['username']
+            password = user_serializer.data['password']
             try:
                 get_user_model().objects.get(username=username)
             except get_user_model().DoesNotExist:
@@ -32,17 +34,28 @@ class LoginView(APIView):
                 if not user.is_active:
                     user.is_active = True
                     user.save()
-                serializer = UserCreateSerializer(user)
+                user_serializer = UserWithProfileSerializer(instance=user)
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({
-                    "token": token.key,
-                    "data" : serializer.data
-                }, status=status.HTTP_202_ACCEPTED)
+
+                # check if the user has pending order
+                try:
+                    pending_order = Order.objects.get(created_by=user, is_delivered=False)
+                    order_serializer = OrderSerializer(instance=pending_order)
+                    return Response({
+                        "token": token.key,
+                        "cooking_order": order_serializer.data,
+                        "user": user_serializer.data
+                    }, status=status.HTTP_202_ACCEPTED)
+                except Order.DoesNotExist:
+                    return Response({
+                        "token": token.key,
+                        "user" : user_serializer.data
+                    }, status=status.HTTP_202_ACCEPTED)
             return Response(
                 {"detail": "Login Failed! Provide Valid Authentication Credentials."},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
