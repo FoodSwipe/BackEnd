@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -26,8 +25,6 @@ class OrderWithCartListView(APIView):
             return Response({
                 "message": "Order not found."
             }, status=status.HTTP_404_NOT_FOUND)
-
-
 
 
 class InitializeOrder(APIView):

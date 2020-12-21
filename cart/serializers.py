@@ -69,8 +69,13 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         creator = self.context["request"].user
+        custom_contact = validated_data.get("custom_contact")
         if isinstance(creator, AnonymousUser):
-            validated_data["created_by"] = None
+            try:
+                order = Order.objects.get(custom_contact=custom_contact, created_by=None)
+                raise serializers.ValidationError("Your order has already started at #{}. Please check your cart.".format(order.id))
+            except Order.DoesNotExist:
+                validated_data["created_by"] = None
         else:
             validated_data["created_by"] = creator
         return Order.objects.create(**validated_data)

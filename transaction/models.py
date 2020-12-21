@@ -8,7 +8,7 @@ class Transaction(models.Model):
     order = models.OneToOneField(
         Order,
         related_name="TransactionOrder",
-        on_delete=models.DO_NOTHING
+        on_delete=models.CASCADE
     )
     grand_total = models.DecimalField(default=0, decimal_places=2, max_digits=8, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
