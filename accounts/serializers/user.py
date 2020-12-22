@@ -1,30 +1,26 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.utils.timezone import now
+from django.utils import timezone
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 
 from accounts.models import Profile
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
-    contact = serializers.IntegerField(required=True)
+    contact = PhoneNumberField(required=True)
     address = serializers.CharField(required=True)
+    full_name = serializers.CharField(required=True)
 
     class Meta:
         model = get_user_model()
-        fields = ["first_name", "last_name", "username", "email", "password", "contact", "address"]
+        fields = ["full_name", "last_name", "username", "email", "password", "contact", "address"]
 
     @staticmethod
-    def validate_first_name(first_name):
-        if not first_name:
+    def validate_full_name(full_name):
+        if not full_name:
             raise serializers.ValidationError("This field may not be null.")
-        return first_name
-
-    @staticmethod
-    def validate_last_name(last_name):
-        if not last_name:
-            raise serializers.ValidationError("This field may not be null.")
-        return last_name
+        return full_name
 
     @staticmethod
     def validate_email(email):
@@ -41,7 +37,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def validate_contact(phone_number):
-        phone_number = int(phone_number)
         try:
             Profile.objects.get(contact=phone_number)
             raise serializers.ValidationError("Contact must be a unique value.")
@@ -50,8 +45,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = get_user_model().objects.create(
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
             username=validated_data["username"],
             password=validated_data["password"],
             email=validated_data["email"]
@@ -59,6 +52,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         user_profile = Profile.objects.get(user=user)
+        user_profile.full_name = validated_data["full_name"]
         user_profile.contact = validated_data["contact"]
         user_profile.address = validated_data["address"]
         user_profile.save()
@@ -66,9 +60,10 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 
 class AddUserSerializer(serializers.ModelSerializer):
-    contact = serializers.IntegerField(required=True)
+    contact = PhoneNumberField(required=True)
     birth_date = serializers.CharField(allow_null=True)
     address = serializers.CharField(required=True)
+    full_name = serializers.CharField()
 
     @staticmethod
     def validate_password(password):
@@ -79,12 +74,10 @@ class AddUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["first_name", "last_name", "username", "email", "password", "contact", "address", "birth_date"]
+        fields = ["full_name", "username", "email", "password", "contact", "address", "birth_date"]
 
     def create(self, validated_data):
         user = get_user_model().objects.create(
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
             username=validated_data["username"],
             password=validated_data["password"],
             email=validated_data["email"]
@@ -92,6 +85,7 @@ class AddUserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         user_profile = Profile.objects.get(user=user)
+        user_profile.full_name = validated_data.get("full_name", "")
         user_profile.contact = validated_data["contact"]
         user_profile.address = validated_data["address"]
         user_profile.birth_date = validated_data["birth_date"]
@@ -100,23 +94,23 @@ class AddUserSerializer(serializers.ModelSerializer):
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    contact = serializers.IntegerField(required=True)
+    contact = PhoneNumberField(required=True)
     birth_date = serializers.CharField(allow_null=True)
     address = serializers.CharField(required=True)
+    full_name = serializers.CharField()
 
     class Meta:
         model = get_user_model()
-        fields = ["first_name", "last_name", "username", "email", "contact", "address", "birth_date"]
+        fields = ["full_name", "username", "email", "contact", "address", "birth_date"]
 
     def update(self, instance, validated_data):
         profile = instance.profile
+        profile.full_name = validated_data.get("full_name", profile.full_name)
         profile.contact = validated_data.get("contact", profile.contact)
         profile.address = validated_data.get("address", profile.address)
         profile.birth_date = validated_data.get("birth_date", profile.birth_date)
         profile.save()
         instance.username = validated_data.get("username", instance.username)
-        instance.first_name = validated_data.get("first_name", instance.first_name)
-        instance.last_name = validated_data.get("last_name", instance.last_name)
         instance.password = validated_data.get("password", instance.password)
         instance.email = validated_data.get("email", instance.email)
         instance.save()
@@ -144,7 +138,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("username", "first_name", "last_name", "email")
+        fields = ("username", "email")
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -153,6 +147,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
+            "full_name",
             "bio",
             "contact",
             "birth_date",
@@ -179,18 +174,17 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_last_login(obj):
-        return '{} days ago'.format((now() - obj.last_login).days)
+        if obj.last_login: return '{} days ago'.format((timezone.datetime.now() - obj.last_login).days)
+        else: return None
 
     @staticmethod
     def get_date_joined(obj):
-        return '{} days ago'.format((now() - obj.date_joined).days)
+        return '{} days ago'.format((timezone.datetime.now() - obj.date_joined).days)
 
     class Meta:
         model = get_user_model()
         fields = [
             "id",
-            "first_name",
-            "last_name",
             "username",
             "email",
             "admin",

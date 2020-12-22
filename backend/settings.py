@@ -159,15 +159,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
-TIME_ZONE = os.getenv("TIME_ZONE")
+TIME_ZONE = "Asia/Kathmandu"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -216,3 +214,12 @@ EMAIL_HOST_USER = 'foo@swipe.com'
 # File extension rule
 ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG", "webp"]
 MAX_UPLOAD_IMAGE_SIZE = 20000
+
+LOYALTY_DISCOUNT = 10
+DELIVERY_START_PM = 17
+DELIVERY_START_AM = 4
+DELIVERY_CHARGE = 50
+LOYALTY_10_PER_FROM = 10000
+LOYALTY_12_PER_FROM = 12000
+LOYALTY_13_PER_FROM = 15000
+LOYALTY_15_PER_FROM = 20000

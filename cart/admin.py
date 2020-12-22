@@ -7,6 +7,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "created_by",
         "custom_location",
+        "custom_contact",
+        "custom_email",
         "total_price",
         "created_at",
         "updated_at",
@@ -14,13 +16,15 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = (
         "created_by",
         "custom_location",
+        "custom_contact",
+        "custom_email",
         "total_price",
         "created_at",
         "updated_at",
     )
     list_filter = ("created_at",)
     date_hierarchy = "created_at"
-    search_fields = ("created_by__username", "custom_location",)
+    search_fields = ("created_by__username", "custom_location", "custom_contact", "custom_email",)
     list_per_page = 10
 
     def save_model(self, request, obj, form, change):

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer, RegisterUserSerializer, \
-    AddUserSerializer, UpdateUserSerializer
+    AddUserSerializer, UpdateUserSerializer, UserWithProfileSerializer
 
 
 class RegisterUser(APIView):
@@ -23,7 +23,7 @@ class RegisterUser(APIView):
 
         if serializer.is_valid():
             user = serializer.save()
-            return Response(UserCreateSerializer(user).data, status=status.HTTP_201_CREATED)
+            return Response(UserWithProfileSerializer(user).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

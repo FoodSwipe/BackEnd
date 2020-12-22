@@ -8,15 +8,15 @@ from accounts.models import Profile, ResetPasswordCode
 class UserAdmin(BaseUserAdmin):
     save_on_top = True
     list_display = (
-        "username", "email", "first_name", "last_name",
+        "username", "email",
         "is_superuser", "is_staff", "is_active", "date_joined"
     )
     ordering = (
-        "username", "email", "first_name", "last_name",
+        "username", "email",
         "is_superuser", "is_staff", "is_active", "date_joined"
     )
-    sortable_by = ("username", "first_name", "last_name")
-    search_fields = ("username", "email", "first_name", "last_name")
+    sortable_by = ("username",)
+    search_fields = ("username", "email")
     list_filter = ("is_superuser", "is_staff", "date_joined", "is_active")
     date_hierarchy = "date_joined"
 
@@ -27,11 +27,11 @@ class UserAdmin(BaseUserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = (
-        "user", "bio", "contact", "birth_date",
+        "user", "full_name", "bio", "contact", "birth_date",
         "address", "last_updated",
     )
     ordering = (
-        "user", "bio", "contact", "birth_date",
+        "user", "full_name", "bio", "contact", "birth_date",
         "address", "last_updated",
     )
     list_filter = (
@@ -41,7 +41,7 @@ class ProfileAdmin(admin.ModelAdmin):
     date_hierarchy = "user__date_joined"
     search_fields = (
         "user__username", "contact",
-        "address",
+        "address", "full_name"
     )
     autocomplete_fields = ["user"]
 
@@ -49,7 +49,7 @@ class ProfileAdmin(admin.ModelAdmin):
         ("Personal Information", {
             "classes": ("wide", "extrapretty"),
             "fields" : (
-                "contact", "bio", "birth_date", "image"
+                "full_name", "contact", "bio", "birth_date", "image"
             )
         }),
         ("Location Information", {

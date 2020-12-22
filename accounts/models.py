@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
 
@@ -27,8 +27,9 @@ class Profile(models.Model):
         editable=False,
         related_name="profile"
     )
+    full_name = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(null=True, blank=True, max_length=1024)
-    contact = models.PositiveBigIntegerField(unique=True, null=True)
+    contact = PhoneNumberField(unique=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=512, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)

@@ -9,6 +9,28 @@ from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSeria
     OrderCreateSerializer, OrderWithCartListSerializer
 
 
+class PartialUpdateOrderView(APIView):
+    def patch(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            serializer = OrderCreateSerializer(
+                instance=order,
+                data=request.data,
+                partial=True,
+                context={"request": request}
+            )
+            if serializer.is_valid():
+                return Response({
+                    "message": "Order updated successfully."
+                }, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Order.DoesNotExist:
+            return Response({
+                "message": "Order not found."
+            }, status=status.HTTP_404_NOT_FOUND)
+
+
 class OrderWithCartListView(APIView):
     @staticmethod
     def get(request, pk):

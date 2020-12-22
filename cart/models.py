@@ -4,20 +4,27 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from item.models import MenuItem
 
+PAYMENT_CHOICES = [
+    ('Cash', 'Cash')
+]
+
 
 class Order(models.Model):
-    custom_location = models.CharField(max_length=512, null=True)
-    custom_contact = PhoneNumberField(null=True)
+    custom_location = models.CharField(max_length=512)
+    custom_contact = PhoneNumberField()
+    custom_email = models.EmailField(null=True)
+    total_price = models.DecimalField(default=0, decimal_places=2, max_digits=8, editable=False)
     delivery_started = models.BooleanField(default=False)
-    delivery_started_at = models.DateTimeField(null=True, blank=True)
+    delivery_started_at = models.DateTimeField(null=True, blank=True, editable=False)
     is_delivered = models.BooleanField(default=False, editable=False)
-    sub_total = models.PositiveBigIntegerField(default=0, editable=False)
+    delivery_charge = models.PositiveIntegerField(default=0)
     loyalty_discount = models.PositiveBigIntegerField(default=0, editable=False)
     grand_total = models.PositiveBigIntegerField(default=0, editable=False)
-    total_price = models.DecimalField(default=0, decimal_places=2, max_digits=8, editable=False)
+    done_from_customer = models.BooleanField(default=False)
     total_items = models.PositiveBigIntegerField(default=0, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
+    payment_type = models.CharField(max_length=20, choices=PAYMENT_CHOICES, default="Cash")
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.DO_NOTHING,

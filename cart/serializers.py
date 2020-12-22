@@ -1,10 +1,20 @@
+import decimal
+
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 from rest_framework import serializers
 
+from backend.settings import DELIVERY_START_PM, DELIVERY_START_AM, DELIVERY_CHARGE, LOYALTY_12_PER_FROM, \
+    LOYALTY_10_PER_FROM, LOYALTY_13_PER_FROM, LOYALTY_15_PER_FROM
 from cart.models import CartItem, Order
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
+
     class Meta:
         model = CartItem
         fields = "__all__"
@@ -18,6 +28,8 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
         extra_kwargs = {"order": {"write_only": True}}
 
     def create(self, validated_data):
+        current_hour = int(timezone.datetime.now().strftime("%H"))
+
         try:
             check = validated_data["quantity"]
         except KeyError:
@@ -33,16 +45,51 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
         cart_item = validated_data["item"]
         item_base_order.total_items += int(validated_data["quantity"])
         item_base_order.total_price += cart_item.price * int(validated_data["quantity"])
+
+        if current_hour >= DELIVERY_START_PM or current_hour <= DELIVERY_START_AM:
+            item_base_order.delivery_charge = DELIVERY_CHARGE
+
+        if LOYALTY_10_PER_FROM <= item_base_order.total_price < LOYALTY_12_PER_FROM:
+            item_base_order.loyalty_discount = 10
+        elif LOYALTY_12_PER_FROM <= item_base_order.total_price < LOYALTY_13_PER_FROM:
+            item_base_order.loyalty_discount = 12
+        elif LOYALTY_13_PER_FROM <= item_base_order.total_price < LOYALTY_15_PER_FROM:
+            item_base_order.loyalty_discount = 13
+        elif item_base_order.total_price >= LOYALTY_15_PER_FROM:
+            item_base_order.loyalty_discount = 15
+
+        item_base_order.grand_total = \
+            item_base_order.total_price + item_base_order.delivery_charge - \
+            decimal.Decimal(item_base_order.loyalty_discount / 100) * item_base_order.total_price
+
         item_base_order.save()
         return CartItem.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        current_hour = int(timezone.datetime.now().strftime("%H"))
         if instance.quantity != validated_data["quantity"]:
             instance.order.total_items -= instance.quantity
             instance.order.total_items += validated_data["quantity"]
 
             instance.order.total_price -= instance.quantity * instance.item.price
             instance.order.total_price += instance.item.price * int(validated_data["quantity"])
+
+            if current_hour >= DELIVERY_START_PM or current_hour <= DELIVERY_START_AM:
+                instance.order.delivery_charge = DELIVERY_CHARGE
+
+            if LOYALTY_10_PER_FROM <= instance.order.total_price < LOYALTY_12_PER_FROM:
+                instance.order.loyalty_discount = 10
+            elif LOYALTY_12_PER_FROM <= instance.order.total_price < LOYALTY_13_PER_FROM:
+                instance.order.loyalty_discount = 12
+            elif LOYALTY_13_PER_FROM <= instance.order.total_price < LOYALTY_15_PER_FROM:
+                instance.order.loyalty_discount = 13
+            elif instance.order.total_price >= LOYALTY_15_PER_FROM:
+                instance.order.loyalty_discount = 15
+
+            instance.order.grand_total = \
+                instance.order.total_price + instance.order.delivery_charge - \
+                decimal.Decimal(instance.order.loyalty_discount / 100) * instance.order.total_price
+
             instance.order.save()
         return super().update(instance, validated_data)
 
@@ -57,7 +104,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['custom_location', "custom_contact"]
+        fields = ['custom_location', "custom_contact", "custom_email", "payment_type", "done_from_customer"]
 
     def get_fields(self, *args, **kwargs):
         fields = super(OrderCreateSerializer, self).get_fields()
@@ -70,13 +117,21 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         creator = self.context["request"].user
         custom_contact = validated_data.get("custom_contact")
+        # check if pending order exists from customer side
         if isinstance(creator, AnonymousUser):
             try:
-                order = Order.objects.get(custom_contact=custom_contact, created_by=None)
-                raise serializers.ValidationError("Your order has already started at #{}. Please check your cart.".format(order.id))
+                order = Order.objects.get(custom_contact=custom_contact, created_by=None, done_from_customer=False)
+                raise serializers.ValidationError(
+                    "Ongoing order exists at #{}. Please check your cart.".format(order.id))
             except Order.DoesNotExist:
                 validated_data["created_by"] = None
         else:
+            try:
+                order = Order.objects.get(custom_contact=custom_contact, created_by=creator, done_from_customer=False)
+                raise serializers.ValidationError(
+                    "Ongoing order exists at #{}. Please check your cart.".format(order.id))
+            except Order.DoesNotExist:
+                validated_data["created_by"] = creator
             validated_data["created_by"] = creator
         return Order.objects.create(**validated_data)
 
@@ -100,10 +155,11 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
         fields = [
             "custom_location",
             "custom_contact",
+            "custom_email",
             "delivery_started",
             "delivery_started_at",
             "is_delivered",
-            "sub_total",
+            "delivery_charge",
             "loyalty_discount",
             "grand_total",
             "total_price",
