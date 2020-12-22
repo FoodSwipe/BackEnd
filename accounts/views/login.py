@@ -39,7 +39,9 @@ class LoginView(APIView):
 
                 # check if the user has pending order
                 try:
-                    pending_order = Order.objects.get(created_by=user, is_delivered=False)
+                    pending_order = Order.objects\
+                        .filter(created_by=user, done_from_customer=False)\
+                        .order_by("-created_at").first()
                     order_serializer = OrderSerializer(instance=pending_order)
                     return Response({
                         "token": token.key,

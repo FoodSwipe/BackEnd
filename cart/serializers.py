@@ -133,8 +133,10 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                     "Ongoing order exists at #{}. Please check your cart.".format(order.id))
             except Order.DoesNotExist:
                 validated_data["created_by"] = creator
-            validated_data["created_by"] = creator
-        return Order.objects.create(**validated_data)
+                email = validated_data.get("custom_email", None)
+                if not email:
+                    validated_data["custom_email"] = creator.email
+                return Order.objects.create(**validated_data)
 
 
 class OrderPOSTSerializer(serializers.ModelSerializer):

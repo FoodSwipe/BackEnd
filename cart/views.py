@@ -20,6 +20,7 @@ class PartialUpdateOrderView(APIView):
                 context={"request": request}
             )
             if serializer.is_valid():
+                serializer.save()
                 return Response({
                     "message": "Order updated successfully."
                 }, status=status.HTTP_204_NO_CONTENT)

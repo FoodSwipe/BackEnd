@@ -5,7 +5,9 @@ from cart.models import Order, CartItem
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "created_by",
+        "done_from_customer",
         "custom_location",
         "custom_contact",
         "custom_email",
@@ -15,6 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
     )
     ordering = (
         "created_by",
+        "done_from_customer",
         "custom_location",
         "custom_contact",
         "custom_email",
