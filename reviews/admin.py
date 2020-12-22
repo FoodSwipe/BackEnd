@@ -5,6 +5,7 @@ from reviews.models import Review
 
 class ReviewAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "review",
         "menu_item",
         "reviewer",

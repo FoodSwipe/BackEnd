@@ -11,6 +11,7 @@ class ItemTypeAdmin(admin.ModelAdmin):
 class MenuItemAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = (
+        "id",
         "name",
         "menu_item_group",
         "price",

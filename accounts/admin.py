@@ -8,7 +8,7 @@ from accounts.models import Profile, ResetPasswordCode
 class UserAdmin(BaseUserAdmin):
     save_on_top = True
     list_display = (
-        "username", "email",
+        "id", "username", "email",
         "is_superuser", "is_staff", "is_active", "date_joined"
     )
     ordering = (
@@ -27,7 +27,7 @@ class UserAdmin(BaseUserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = (
-        "user", "full_name", "bio", "contact", "birth_date",
+        "id", "user", "full_name", "bio", "contact", "birth_date",
         "address", "last_updated",
     )
     ordering = (
@@ -67,7 +67,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class ResetPasswordCodeAdmin(admin.ModelAdmin):
-    list_display = ("user", "code")
+    list_display = ("id", "user", "code")
     list_per_page = 10
     date_hierarchy = "user__date_joined"
     list_filter = ("user__date_joined",)

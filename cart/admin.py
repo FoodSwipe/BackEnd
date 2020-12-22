@@ -40,6 +40,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 class CartAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "order",
         "item",
         "quantity",

@@ -5,6 +5,7 @@ from item_group.models import MenuItemGroup
 
 class MenuItemGroupAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "name",
         "description",
         "created_at",
