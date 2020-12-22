@@ -1,6 +1,7 @@
+from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
-from backend.settings import MAX_UPLOAD_IMAGE_SIZE
+from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
 from item.models import MenuItem, ItemType
 from utils.file import check_size
 
@@ -17,6 +18,8 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 
 class MenuItemPOSTSerializer(serializers.ModelSerializer):
+    image = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+
     class Meta:
         model = MenuItem
         fields = "__all__"
@@ -28,9 +31,11 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
             fields['image'].required = False
         return fields
 
-    def validate_image(self, obj):
-        check_size(obj, MAX_UPLOAD_IMAGE_SIZE)
-        return obj
+    @staticmethod
+    def validate_image(image):
+        if image:
+            check_size(image, MAX_UPLOAD_IMAGE_SIZE)
+        return image
 
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
@@ -52,13 +57,17 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
 
 
 class ItemTypeSerializer(serializers.ModelSerializer):
+    badge = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+
     class Meta:
         model = ItemType
         fields = "__all__"
 
-    def validate_badge(self, obj):
-        check_size(obj, MAX_UPLOAD_IMAGE_SIZE)
-        return obj
+    @staticmethod
+    def validate_badge(image):
+        if image:
+            check_size(image, MAX_UPLOAD_IMAGE_SIZE)
+        return image
 
 
 class OrderNowListSerializer(serializers.ModelSerializer):
@@ -69,5 +78,6 @@ class OrderNowListSerializer(serializers.ModelSerializer):
         model = MenuItem
         fields = ["id", "name", "group", "image", "price"]
 
-    def get_group(self, menu_item):
+    @staticmethod
+    def get_group(menu_item):
         return menu_item.menu_item_group.name

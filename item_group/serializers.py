@@ -1,6 +1,7 @@
+from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
-from backend.settings import MAX_UPLOAD_IMAGE_SIZE
+from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
 from item.models import MenuItem
 from item_group.models import MenuItemGroup
 from utils.file import check_size
@@ -33,6 +34,14 @@ class MenuItemGroupSerializer(serializers.ModelSerializer):
 
 
 class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
+    image = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+
+    @staticmethod
+    def validate_image(image):
+        if image:
+            check_size(image, MAX_UPLOAD_IMAGE_SIZE)
+        return image
+
     class Meta:
         model = MenuItemGroup
         fields = "__all__"
@@ -43,10 +52,6 @@ class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
         if request and getattr(request, 'method', None) == "PUT":
             fields['image'].required = False
         return fields
-
-    def validate_image(self, obj):
-        check_size(obj, MAX_UPLOAD_IMAGE_SIZE)
-        return obj
 
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
