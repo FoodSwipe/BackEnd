@@ -22,7 +22,7 @@ class OrderAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-    list_filter = ("created_at",)
+    list_filter = ("created_at", "updated_at")
     date_hierarchy = "created_at"
     search_fields = ("created_by__username", "custom_location", "custom_contact", "custom_email",)
     list_per_page = 10
@@ -52,6 +52,7 @@ class CartAdmin(admin.ModelAdmin):
         "created_by",
         "updated_at"
     )
+    list_filter = ("created_at", "updated_at")
     date_hierarchy = "created_at"
     search_fields = ("item__name", "created_by__username")
     autocomplete_fields = ("item",)

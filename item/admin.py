@@ -38,7 +38,7 @@ class MenuItemAdmin(admin.ModelAdmin):
         "is_veg",
         "is_available",
         "menu_item_group",
-        "created_at"
+        "created_at", "updated_at"
     )
     filter_horizontal = ("item_type",)
     search_fields = ("name", "menu_item_group__name", "ingredients")

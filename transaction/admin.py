@@ -20,7 +20,7 @@ class TransactionAdmin(admin.ModelAdmin):
         "updated_at",
         "updated_by",
     )
-    list_filter = ("created_at",)
+    list_filter = ("created_at", "updated_at")
     search_fields = ("created_by__username", )
     date_hierarchy = "created_at"
     autocomplete_fields = ("order",)
