@@ -12,7 +12,8 @@ from cart.models import CartItem, Order
 class CartItemSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
 
-    def get_created_at(self, obj):
+    @staticmethod
+    def get_created_at(obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
 
     class Meta:
@@ -149,6 +150,16 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
 
 class OrderWithCartListSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True, read_only=True)
+    created_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_created_at(obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
+
+    @staticmethod
+    def get_updated_at(obj):
+        return obj.updated_at.strftime("%Y/%m/%d %H:%M:%S")
 
     class Meta:
         model = Order

@@ -8,10 +8,21 @@ from utils.file import check_size
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    reviewed_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
+
     class Meta:
         model = Review
         depth = 1
         fields = "__all__"
+
+    @staticmethod
+    def get_reviewed_at(obj):
+        return obj.reviewed_at.strftime("%Y/%m/%d %H:%M:%S")
+
+    @staticmethod
+    def get_updated_at(obj):
+        return obj.updated_at.strftime("%Y/%m/%d %H:%M:%S")
 
 
 class ReviewPostSerializer(serializers.ModelSerializer):

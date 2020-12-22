@@ -27,6 +27,17 @@ class ItemGroupSerializer(serializers.ModelSerializer):
 
 
 class MenuItemGroupSerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_created_at(obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
+
+    @staticmethod
+    def get_updated_at(obj):
+        return obj.updated_at.strftime("%Y/%m/%d %H:%M:%S")
+
     class Meta:
         model = MenuItemGroup
         fields = "__all__"
