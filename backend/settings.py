@@ -207,10 +207,12 @@ CACHES = {
 SELECT2_CACHE_BACKEND = "select2"
 
 # EMAIL_CONFIGURATION
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "127.0.0.1"
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = 'foo@swipe.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("HOST_EMAIL")
+EMAIL_HOST_PASSWORD = os.getenv("HOST_PASSWORD")
 
 # File extension rule
 ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG", "webp"]

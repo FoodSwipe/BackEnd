@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
                                  update_session_auth_hash)
@@ -81,7 +83,7 @@ class ResetPasswordRequestCode(APIView):
                 send_mail(
                     mail_subject,
                     message="ResetPassword",
-                    from_email=settings.EMAIL_HOST_USER,
+                    from_email=os.getenv("HOST_EMAIL"),
                     recipient_list=[email],
                     html_message=message
                 )

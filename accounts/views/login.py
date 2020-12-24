@@ -38,17 +38,17 @@ class LoginView(APIView):
                 token, created = Token.objects.get_or_create(user=user)
 
                 # check if the user has pending order
-                try:
-                    pending_order = Order.objects\
-                        .filter(created_by=user, done_from_customer=False)\
-                        .order_by("-created_at").first()
+                pending_order = Order.objects \
+                    .filter(created_by=user, done_from_customer=False) \
+                    .order_by("-created_at").first()
+                if pending_order:
                     order_serializer = OrderSerializer(instance=pending_order)
                     return Response({
                         "token": token.key,
                         "cooking_order": order_serializer.data,
                         "user": user_serializer.data
                     }, status=status.HTTP_202_ACCEPTED)
-                except Order.DoesNotExist:
+                else:
                     return Response({
                         "token": token.key,
                         "user" : user_serializer.data
