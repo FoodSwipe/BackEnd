@@ -67,7 +67,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class ResetPasswordCodeAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "code")
+    list_display = ("user", "code")
     list_per_page = 10
     date_hierarchy = "user__date_joined"
     list_filter = ("user__date_joined",)
