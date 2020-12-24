@@ -99,21 +99,46 @@ class Item(models.Model):
         super().delete(using, keep_parents)
 
 
+BAR_SIZE_CHOICES = [
+    ('Quarter', 'Quarter'),
+    ('Half', 'Half'),
+    ('Full', 'Full'),
+]
+
+
 class MenuItem(Item):
-    ingredients = ArrayField(models.CharField(max_length=64), size=20)
-    scale = models.IntegerField(default=1,
-                                help_text="Scale for price i.e. how much (quantity / weight(ml)) on this price?")
+    ingredients = models.CharField(max_length=512, null=True)
+    scale = models.IntegerField(
+        default=1,
+        help_text="Scale for price i.e. how much (pcs/ml) on this price?"
+    )
     weight = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True,
         help_text="in grams for regular item and ml for bar item"
     )
-    calorie = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, help_text="in kCal")
-    is_veg = models.BooleanField(verbose_name="Is vegetarian item?", default=False)
+    calorie = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="in kCal"
+    )
+    is_veg = models.BooleanField(
+        verbose_name="Is vegetarian item?",
+        default=False
+    )
     item_type = models.ManyToManyField(
         ItemType,
         help_text="You can select multiple item types.",
         blank=True,
         related_name="item_types"
+    )
+    is_bar_item = models.BooleanField(default=False)
+    bar_size = models.CharField(
+        max_length=8,
+        choices=BAR_SIZE_CHOICES,
+        null=True,
+        blank=True
     )
 
     class Meta:

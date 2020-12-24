@@ -60,10 +60,7 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
         return menu_item
 
     def update(self, instance, validated_data):
-        print("here")
         validated_data["updated_by"] = self.context["request"].user
-        print(validated_data.get("image"))
-        print(validated_data)
         return super().update(instance, validated_data)
 
 

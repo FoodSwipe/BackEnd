@@ -15,8 +15,11 @@ class MenuItemAdmin(admin.ModelAdmin):
         "name",
         "menu_item_group",
         "price",
+        "scale",
         "ingredients",
         "is_veg",
+        "is_bar_item",
+        "bar_size",
         "is_available",
         "created_at",
         "created_by",
@@ -27,8 +30,11 @@ class MenuItemAdmin(admin.ModelAdmin):
         "name",
         "menu_item_group",
         "price",
+        "scale",
         "is_veg",
         "is_available",
+        "is_bar_item",
+        "bar_size",
         "created_at",
         "created_by",
         "updated_at",
@@ -37,6 +43,7 @@ class MenuItemAdmin(admin.ModelAdmin):
     sortable_by = ("name",)
     list_filter = (
         "is_veg",
+        "is_bar_item",
         "is_available",
         "menu_item_group",
         "created_at", "updated_at"
@@ -56,7 +63,9 @@ class MenuItemAdmin(admin.ModelAdmin):
                 "weight",
                 "calorie",
                 "is_veg",
-                "item_type"
+                "item_type",
+                "is_bar_item",
+                "bar_size",
             )
         }),
         ("Business Information", {
