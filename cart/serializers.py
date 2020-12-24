@@ -149,37 +149,66 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         validated_data["created_by"] = self.context["request"].user
         return Order.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        is_delivery_started = validated_data.get("delivery_started", instance.delivery_started)
+        is_delivered = validated_data.get("is_delivered", instance.is_delivered)
+        if is_delivery_started:
+            validated_data["delivery_started_at"] = timezone.datetime.now()
+        if is_delivered:
+            validated_data["delivered_at"] = timezone.datetime.now()
+        return super().update(instance, validated_data)
+
 
 class OrderWithCartListSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True, read_only=True)
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
+    delivery_started_at = serializers.SerializerMethodField()
+    delivered_at = serializers.SerializerMethodField()
 
     @staticmethod
     def get_created_at(obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
 
     @staticmethod
+    def get_delivery_started_at(obj):
+        if not obj.delivery_started_at:
+            return obj.delivery_started_at
+        return obj.delivery_started_at.strftime("%Y/%m/%d %H:%M:%S")
+
+    @staticmethod
     def get_updated_at(obj):
+        if not obj.updated_at:
+            return obj.updated_at
         return obj.updated_at.strftime("%Y/%m/%d %H:%M:%S")
+
+    @staticmethod
+    def get_delivered_at(obj):
+        if not obj.delivered_at:
+            return obj.delivered_at
+        return obj.delivered_at.strftime("%Y/%m/%d %H:%M:%S")
 
     class Meta:
         model = Order
         fields = [
+            "id",
             "custom_location",
             "custom_contact",
             "custom_email",
             "delivery_started",
             "delivery_started_at",
             "is_delivered",
+            "delivered_at",
             "delivery_charge",
             "loyalty_discount",
             "grand_total",
             "total_price",
             "total_items",
+            "done_from_customer",
             "created_at",
             "updated_at",
             "created_by",
             "updated_by",
             "cart_items"
         ]
+        depth = 1

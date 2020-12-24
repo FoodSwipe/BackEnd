@@ -9,6 +9,18 @@ from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSeria
     OrderCreateSerializer, OrderWithCartListSerializer
 
 
+class OrderWithCartItemsList(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        orders = Order.objects.all().order_by('-created_at')
+        serializer = OrderWithCartListSerializer(instance=orders, many=True, read_only=True)
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
+
+
 class PartialUpdateOrderView(APIView):
     def patch(self, request, pk):
         try:
@@ -71,7 +83,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.action == "create" or self.action == "update":
+        if self.action in ["create", "partial_update", "update"]:
             return OrderPOSTSerializer
         return super(OrderViewSet, self).get_serializer_class()
 
