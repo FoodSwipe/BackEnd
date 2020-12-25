@@ -7,6 +7,7 @@ from rest_framework import serializers
 from backend.settings import DELIVERY_START_PM, DELIVERY_START_AM, DELIVERY_CHARGE, LOYALTY_12_PER_FROM, \
     LOYALTY_10_PER_FROM, LOYALTY_13_PER_FROM, LOYALTY_15_PER_FROM
 from cart.models import CartItem, Order
+from item.models import MenuItem
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -212,3 +213,13 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
             "cart_items"
         ]
         depth = 1
+
+
+class RecentLocationsSerializer(serializers.Serializer):
+    location = serializers.CharField()
+    count = serializers.IntegerField()
+
+
+class UserTopItemsSerializer(serializers.Serializer):
+    image = serializers.CharField(max_length=None)
+    count = serializers.IntegerField()
