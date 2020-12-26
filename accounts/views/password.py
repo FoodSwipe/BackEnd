@@ -1,6 +1,5 @@
 import os
 
-from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
                                  update_session_auth_hash)
 from django.contrib.sites.shortcuts import get_current_site

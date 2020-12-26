@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from accounts.serializers.profile import ProfilePOSTSerializer, ProfileSerializer
-from utils.helper import generate_url_for_media_resource, generate_url_for_media_resources
+from utils.helper import generate_url_for_media_resources
 
 
 class ListProfiles(APIView):

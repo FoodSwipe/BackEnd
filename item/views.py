@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from item.models import MenuItem, ItemType
 from item.serializers import MenuItemSerializer, MenuItemPOSTSerializer, ItemTypeSerializer, OrderNowListSerializer
+from log.models import Log
 
 
 class MenuItemViewSet(viewsets.ModelViewSet):
@@ -23,6 +24,11 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         menu_item = self.get_object()
         menu_item.image.delete()
         menu_item.delete()
+        Log.objects.create(
+            mode="delete",
+            actor=request.user,
+            detail="Menu item deleted. ({})".format(menu_item.name)
+        )
         return Response({
             "message": "Menu item deleted successfully."
         }, status=status.HTTP_204_NO_CONTENT)

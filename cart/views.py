@@ -12,7 +12,7 @@ from cart.models import Order, CartItem
 from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSerializer, CartItemPOSTSerializer, \
     OrderCreateSerializer, OrderWithCartListSerializer, RecentLocationsSerializer, UserTopItemsSerializer
 from item.models import MenuItem
-from item.serializers import MenuItemSerializer
+from log.models import Log
 from utils.helper import generate_url_for_media_resources
 
 
@@ -97,6 +97,11 @@ class OrderViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         order = self.get_object()
         order.delete()
+        Log.objects.create(
+            mode="delete",
+            actor=request.user,
+            detail="Deleted order #{} of user {}".format(order.id, order.custom_contact)
+        )
         return Response({
             "message": "Order deleted successfully."
         }, status=status.HTTP_204_NO_CONTENT)

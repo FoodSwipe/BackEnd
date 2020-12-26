@@ -7,7 +7,7 @@ from rest_framework import serializers
 from backend.settings import DELIVERY_START_PM, DELIVERY_START_AM, DELIVERY_CHARGE, LOYALTY_12_PER_FROM, \
     LOYALTY_10_PER_FROM, LOYALTY_13_PER_FROM, LOYALTY_15_PER_FROM
 from cart.models import CartItem, Order
-from item.models import MenuItem
+from log.models import Log
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -153,10 +153,30 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         is_delivery_started = validated_data.get("delivery_started", instance.delivery_started)
         is_delivered = validated_data.get("is_delivered", instance.is_delivered)
+        done_from_customer = validated_data.get("done_from_customer", instance.done_from_customer)
+        if done_from_customer:
+            Log.objects.create(
+                mode="complete",
+                actor=self.context['request'].user,
+                detail="Order #{} from {} marked done by customer {}".format(
+                    instance.id, instance.custom_address, instance.custom_contact
+                )
+            )
+
         if is_delivery_started:
             validated_data["delivery_started_at"] = timezone.datetime.now()
+            Log.objects.create(
+                mode="start",
+                actor=self.context['request'].user,
+                detail="Delivery started for order #{} by {}".format(instance.id, self.context['request'].user.username)
+            )
         if is_delivered:
             validated_data["delivered_at"] = timezone.datetime.now()
+            Log.objects.create(
+                mode="complete",
+                actor=self.context['request'].user,
+                detail="Delivery completed for order #{} by {}".format(instance.id, self.context['request'].user.username)
+            )
         return super().update(instance, validated_data)
 
 

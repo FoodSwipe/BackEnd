@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 
 from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer, RegisterUserSerializer, \
     AddUserSerializer, UpdateUserSerializer, UserWithProfileSerializer
+from log.models import Log
 
 
 class RegisterUser(APIView):
@@ -23,6 +24,7 @@ class RegisterUser(APIView):
 
         if serializer.is_valid():
             user = serializer.save()
+            Log.objects.create(mode="create", actor=user, detail="User registration")
             return Response(UserWithProfileSerializer(user).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -42,6 +44,7 @@ class AddUser(APIView):
         )
         if serializer.is_valid():
             user = serializer.save()
+            Log.objects.create(mode="create", actor=request.user, detail="Added a new user.")
             return Response(UserCreateSerializer(user).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,6 +155,7 @@ class UserDetail(APIView):
     def delete(self, request, pk):
         user = self.get_object(pk)
         user.delete()
+        Log.objects.create(mode="delete", actor=request.user, detail="Removed user {}".format(user.username))
         return Response({
             "message": "User deleted successfully."
         }, status=status.HTTP_204_NO_CONTENT)
@@ -173,6 +177,7 @@ class ToggleSuperUserStatus(APIView):
         user = self.get_object(pk)
         user.is_superuser = not user.is_superuser
         user.save()
+        Log.objects.create(mode="update", actor=request.user, detail="User superuser status toggled.")
         return Response({
             "message": "User superuser status toggled successfully."
         }, status=status.HTTP_204_NO_CONTENT)
@@ -193,6 +198,7 @@ class ToggleStaffUserStatus(APIView):
     def post(self, request, pk):
         user = self.get_object(pk)
         user.is_staff = not user.is_staff
+        Log.objects.create(mode="update", actor=request.user, detail="User superuser status toggled.")
         user.save()
         return Response({
             "message": "User staff status toggled successfully."

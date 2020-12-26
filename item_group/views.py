@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from item_group.models import MenuItemGroup
 from item_group.serializers import MenuItemGroupSerializer, MenuItemGroupPOSTSerializer, ItemGroupSerializer
+from log.models import Log
 
 
 class MenuItemGroupViewSet(viewsets.ModelViewSet):
@@ -23,6 +24,11 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         menu_item_group = self.get_object()
         menu_item_group.image.delete()
         menu_item_group.delete()
+        Log.objects.create(
+            mode="delete",
+            actor=request.user,
+            detail="Menu item group deleted. ({})".format(menu_item_group.name)
+        )
         return Response({
             "message": "Menu item group deleted successfully."
         }, status=status.HTTP_204_NO_CONTENT)

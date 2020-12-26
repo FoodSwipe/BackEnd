@@ -4,6 +4,7 @@ from rest_framework import serializers
 from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
 from item.models import MenuItem
 from item_group.models import MenuItemGroup
+from log.models import Log
 from utils.file import check_size
 
 
@@ -66,6 +67,11 @@ class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
+        Log.objects.create(
+            mode="delete",
+            actor=validated_data["created_by"],
+            detail="New menu item group added. ({})".format(validated_data["name"])
+        )
         return super().create(validated_data)
 
     def update(self, instance, validated_data):

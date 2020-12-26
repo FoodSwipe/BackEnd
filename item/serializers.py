@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
 from item.models import MenuItem, ItemType
+from log.models import Log
 from utils.file import check_size
 
 
@@ -57,6 +58,11 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
         for item_type in item_types:
             menu_item.item_type.add(item_type)
         menu_item.save()
+        Log.objects.create(
+            mode="create",
+            actor=validated_data["created_by"],
+            detail="New menu item added. ({})".format(menu_item.name)
+        )
         return menu_item
 
     def update(self, instance, validated_data):
