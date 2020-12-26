@@ -9,18 +9,14 @@ class TransactionAdmin(admin.ModelAdmin):
         "grand_total",
         "created_at",
         "created_by",
-        "updated_at",
-        "updated_by",
     )
     ordering = (
         "order",
         "grand_total",
         "created_at",
         "created_by",
-        "updated_at",
-        "updated_by",
     )
-    list_filter = ("created_at", "updated_at")
+    list_filter = ("created_at",)
     search_fields = ("created_by__username", )
     date_hierarchy = "created_at"
     autocomplete_fields = ("order",)
@@ -37,10 +33,7 @@ class TransactionAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
-            obj.grand_total = obj.order.total_price
-        else:
-            obj.updated_by = request.user
-            obj.grand_total = obj.order.total_price
+            obj.grand_total = obj.order.grand_total
         super().save_model(request, obj, form, change)
 
 
