@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     "item_group",
     "cart",
     "transaction",
-    "reviews"
+    "reviews",
+    "homepage_content",
+    "log"
 ]
 
 # Rest framework settings
@@ -217,6 +219,7 @@ EMAIL_HOST_PASSWORD = os.getenv("HOST_PASSWORD")
 # File extension rule
 ALLOWED_IMAGES_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "JPG", "webp"]
 MAX_UPLOAD_IMAGE_SIZE = 2000
+HOMEPAGE_CONTENT_IMAGE_MAX_SIZE = 2000
 
 LOYALTY_DISCOUNT = 10
 DELIVERY_START_PM = 17
