@@ -2,12 +2,13 @@ from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
 from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
-from item.models import MenuItem, ItemType
+from item.models import MenuItem, ItemType, TopAndRecommendedItem
 from log.models import Log
 from utils.file import check_size
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
     created_at = serializers.SerializerMethodField()
     updated_at = serializers.SerializerMethodField()
 
@@ -95,3 +96,18 @@ class OrderNowListSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_group(menu_item):
         return menu_item.menu_item_group.name
+
+
+class TopAndRecommendedMenuItemSerializer(serializers.ModelSerializer):
+    menu_item = MenuItemSerializer()
+
+    class Meta:
+        model = TopAndRecommendedItem
+        fields = "__all__"
+        depth = 1
+
+
+class TopAndRecommendedMenuItemPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TopAndRecommendedItem
+        fields = "__all__"

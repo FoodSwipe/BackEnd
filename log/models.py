@@ -12,7 +12,7 @@ LOG_MODES_CHOICES = [
 
 
 class Log(models.Model):
-    mode = models.CharField(max_length=8, choices=LOG_MODES_CHOICES, default="Cash", editable=False)
+    mode = models.CharField(max_length=8, choices=LOG_MODES_CHOICES, editable=False)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
     actor = models.ForeignKey(
         get_user_model(),
@@ -23,4 +23,4 @@ class Log(models.Model):
     detail = models.CharField(max_length=512, editable=False)
 
     def __str__(self):
-        return "({}) {}".format(self.log_mode, self.actor.username)
+        return "({}) {}".format(self.mode, self.actor.username)

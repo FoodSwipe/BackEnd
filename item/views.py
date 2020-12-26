@@ -4,9 +4,11 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from item.models import MenuItem, ItemType
-from item.serializers import MenuItemSerializer, MenuItemPOSTSerializer, ItemTypeSerializer, OrderNowListSerializer
+from item.models import MenuItem, ItemType, TopAndRecommendedItem
+from item.serializers import MenuItemSerializer, MenuItemPOSTSerializer, ItemTypeSerializer, OrderNowListSerializer, \
+    TopAndRecommendedMenuItemPostSerializer, TopAndRecommendedMenuItemSerializer
 from log.models import Log
+from utils.helper import generate_url_for_media_resources_in_object
 
 
 class MenuItemViewSet(viewsets.ModelViewSet):
@@ -60,6 +62,46 @@ class OrderNowItemsListView(APIView):
         )
         for item in serializer.data:
             item["avatar"] = item.pop("image")
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class TopRecommendedMenuItemViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    authentication_classes = [TokenAuthentication]
+    serializer_class = TopAndRecommendedMenuItemSerializer
+    queryset = TopAndRecommendedItem.objects.all().order_by("-menu_item__created_at")
+
+    def get_serializer_class(self):
+        if self.action in ["create", "partial_update"]:
+            return TopAndRecommendedMenuItemPostSerializer
+        return super(TopRecommendedMenuItemViewSet, self).get_serializer_class()
+
+
+class TopItemsListView(APIView):
+    def get(self, request):
+        all_items = TopAndRecommendedItem.objects.filter(top=True).order_by("-menu_item__created_at")
+        serializer = TopAndRecommendedMenuItemSerializer(
+            instance=all_items,
+            many=True,
+            read_only=True,
+            context={"request": request}
+        )
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
+
+
+class RecommendedItemsListView(APIView):
+    def get(self, request):
+        all_items = TopAndRecommendedItem.objects.filter(recommended=True).order_by("-menu_item__created_at")
+        serializer = TopAndRecommendedMenuItemSerializer(
+            instance=all_items,
+            many=True,
+            read_only=True,
+            context={"request": request}
+        )
         return Response({
             "results": serializer.data
         }, status=status.HTTP_200_OK)

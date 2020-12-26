@@ -2,15 +2,17 @@ import itertools
 from collections import Counter
 
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cart.models import Order, CartItem
+from cart.models import Order, CartItem, MonthlySalesReport
 from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSerializer, CartItemPOSTSerializer, \
-    OrderCreateSerializer, OrderWithCartListSerializer, RecentLocationsSerializer, UserTopItemsSerializer
+    OrderCreateSerializer, OrderWithCartListSerializer, RecentLocationsSerializer, UserTopItemsSerializer, \
+    SalesReportSerializer
 from item.models import MenuItem
 from log.models import Log
 from utils.helper import generate_url_for_media_resources
@@ -185,7 +187,6 @@ class StorySummaryDetailView(APIView):
                 top_six_items_dict = dict(itertools.islice(desc_sorted_dict.items(), 6))
             for itemId, count in top_six_items_dict.items():
                 item = MenuItem.objects.get(pk=itemId)
-                print(item.image.url)
                 top_item = TopItem(image=item.image.url, count=count)
                 top_item.image = top_item.image[0]
                 top_items.append(top_item)
@@ -235,3 +236,38 @@ class StorySummaryDetailView(APIView):
             return Response({
                 "details": "User not found."
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+class SalesReportListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        # most ordered items calculation
+        bought_items_list = []
+        item_id_list = []
+        all_cart_items = CartItem.objects.all()
+        for cart_item in all_cart_items:
+            item_id_list.append(cart_item.item.id)
+        item_with_count_dict = dict(Counter(item_id_list))
+        desc_sorted_dict = dict(sorted(
+            item_with_count_dict.items(),
+            key=lambda menu_item: menu_item[1],
+            reverse=True
+        ))
+        now = timezone.datetime.now()
+        print(desc_sorted_dict)
+        for itemId, count in desc_sorted_dict.items():
+            item = MenuItem.objects.get(pk=itemId)
+            bought_item, created = MonthlySalesReport.objects.get_or_create(menu_item=item, date=now.strftime("%Y/%m"))
+            bought_item.sale_count = count
+            bought_item.save()
+            bought_items_list.append(bought_item)
+        serializer = SalesReportSerializer(
+            instance=bought_items_list,
+            many=True,
+            context={"request": request}
+        )
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)

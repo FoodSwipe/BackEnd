@@ -75,3 +75,13 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.item.name
+
+
+class MonthlySalesReport(models.Model):
+    menu_item = models.ForeignKey(
+        MenuItem,
+        on_delete=models.DO_NOTHING,
+        related_name="menu_item_sales"
+    )
+    sale_count = models.PositiveBigIntegerField(null=True)
+    date = models.CharField(max_length=7)

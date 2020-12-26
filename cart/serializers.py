@@ -6,7 +6,7 @@ from rest_framework import serializers
 
 from backend.settings import DELIVERY_START_PM, DELIVERY_START_AM, DELIVERY_CHARGE, LOYALTY_12_PER_FROM, \
     LOYALTY_10_PER_FROM, LOYALTY_13_PER_FROM, LOYALTY_15_PER_FROM
-from cart.models import CartItem, Order
+from cart.models import CartItem, Order, MonthlySalesReport
 from log.models import Log
 
 
@@ -155,24 +155,24 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         is_delivered = validated_data.get("is_delivered", instance.is_delivered)
         done_from_customer = validated_data.get("done_from_customer", instance.done_from_customer)
         if done_from_customer:
-            Log.objects.create(
+            Log.objects.get_or_create(
                 mode="complete",
                 actor=self.context['request'].user,
                 detail="Order #{} from {} marked done by customer {}".format(
-                    instance.id, instance.custom_address, instance.custom_contact
+                    instance.id, instance.custom_location, instance.custom_contact
                 )
             )
 
         if is_delivery_started:
             validated_data["delivery_started_at"] = timezone.datetime.now()
-            Log.objects.create(
+            Log.objects.get_or_create(
                 mode="start",
                 actor=self.context['request'].user,
                 detail="Delivery started for order #{} by {}".format(instance.id, self.context['request'].user.username)
             )
         if is_delivered:
             validated_data["delivered_at"] = timezone.datetime.now()
-            Log.objects.create(
+            Log.objects.get_or_create(
                 mode="complete",
                 actor=self.context['request'].user,
                 detail="Delivery completed for order #{} by {}".format(instance.id, self.context['request'].user.username)
@@ -243,3 +243,15 @@ class RecentLocationsSerializer(serializers.Serializer):
 class UserTopItemsSerializer(serializers.Serializer):
     image = serializers.CharField(max_length=None)
     count = serializers.IntegerField()
+
+
+class SalesReportSerializer(serializers.ModelSerializer):
+    menu_item = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_menu_item(obj):
+        return obj.menu_item.name
+
+    class Meta:
+        model = MonthlySalesReport
+        fields = "__all__"

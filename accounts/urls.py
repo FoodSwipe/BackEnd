@@ -1,7 +1,7 @@
 from django.urls import path
 
 from accounts.views.accounts import ListUser, UserDetail, RegisterUser, ToggleSuperUserStatus, ToggleStaffUserStatus, \
-    AddUser, UpdateUserWithProfile
+    AddUser, UpdateUserWithProfile, RegistrationSummaryListView
 from accounts.views.login import LoginView, LogoutView
 from accounts.views.password import UpdatePassword, ResetPasswordRequestCode, ResetPasswordConfirm
 from accounts.views.profile import ListProfile, ProfileDetail, ListProfiles
@@ -24,4 +24,5 @@ urlpatterns = [
     path("user/update-password", UpdatePassword.as_view(), name="update-password"),
     path("user/reset-password", ResetPasswordRequestCode.as_view(), name="reset-password-request"),
     path("user/reset-password/<str:code>/", ResetPasswordConfirm.as_view(), name="reset-password-confirm"),
+    path("registration-summary", RegistrationSummaryListView.as_view(), name="registration-summary")
 ]

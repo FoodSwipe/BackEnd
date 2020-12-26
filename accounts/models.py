@@ -77,3 +77,12 @@ class ResetPasswordCode(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.user.username, self.code)
+
+
+class RegistrationMonthlyCount(models.Model):
+    year = models.CharField(max_length=4)
+    month = models.CharField(max_length=12)
+    count = models.PositiveBigIntegerField(null=True)
+
+    class Meta:
+        unique_together = [["year", "month"]]

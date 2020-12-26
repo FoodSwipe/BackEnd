@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from homepage_content.models import HomePageContent
-from homepage_content.serializer import HomePageContentSerializer
+from homepage_content.serializer import HomePageContentSerializer, HomePageContentPOSTSerializer
 
 
 class HomepageContentViewSet(viewsets.ModelViewSet):
@@ -12,6 +12,11 @@ class HomepageContentViewSet(viewsets.ModelViewSet):
     serializer_class = HomePageContentSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action in ["create", "update", "partial_update"]:
+            return HomePageContentPOSTSerializer
+        return super(HomepageContentViewSet, self).get_serializer_class()
 
     def destroy(self, request, *args, **kwargs):
         homepage_content = self.get_object()

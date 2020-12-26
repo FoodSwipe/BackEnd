@@ -1,13 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import RegistrationMonthlyCount
 from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer, RegisterUserSerializer, \
-    AddUserSerializer, UpdateUserSerializer, UserWithProfileSerializer
+    AddUserSerializer, UpdateUserSerializer, UserWithProfileSerializer, RegistrationMonthlyCountSerializer
 from log.models import Log
 
 
@@ -203,3 +205,33 @@ class ToggleStaffUserStatus(APIView):
         return Response({
             "message": "User staff status toggled successfully."
         }, status=status.HTTP_204_NO_CONTENT)
+
+
+class RegistrationSummaryListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        current_year = timezone.datetime.now().strftime("%Y")
+        current_month_number = timezone.datetime.now().strftime("%m")
+        current_month_name = timezone.datetime.now().strftime("%B")
+
+        this_month_summary, created = RegistrationMonthlyCount.objects.get_or_create(
+            year=current_year,
+            month=current_month_name
+        )
+
+        this_month_users = get_user_model().objects.filter(
+            date_joined__year=current_year,
+            date_joined__month=current_month_number
+        )
+
+        this_month_summary.count = this_month_users.count()
+        this_month_summary.save()
+
+        total_summary = RegistrationMonthlyCount.objects.all()
+        serializer = RegistrationMonthlyCountSerializer(instance=total_summary, many=True, read_only=True)
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
+

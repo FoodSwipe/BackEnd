@@ -5,5 +5,5 @@ from log.views import LogsListView
 app_name = "log"
 
 urlpatterns = [
-    path("logs", LogsListView.as_view(), name="logs-list")
+    path("log", LogsListView.as_view(), name="logs-list")
 ]

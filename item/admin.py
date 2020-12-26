@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from item.models import ItemType, MenuItem
+from item.models import ItemType, MenuItem, TopAndRecommendedItem
 
 
 class ItemTypeAdmin(admin.ModelAdmin):
@@ -92,5 +92,24 @@ class MenuItemAdmin(admin.ModelAdmin):
         obj.delete()
 
 
+class TopAndRecommendedItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "menu_item",
+        "top",
+        "recommended",
+    )
+    list_filter = (
+        "top",
+        "recommended",
+    )
+    autocomplete_fields = ["menu_item"]
+    search_fields = ["menu_item__name"]
+    sortable_by = ["menu_item"]
+    ordering = ["menu_item"]
+    list_per_page = 10
+
+
+
 admin.site.register(ItemType, ItemTypeAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
+admin.site.register(TopAndRecommendedItem, TopAndRecommendedItemAdmin)

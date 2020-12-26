@@ -6,6 +6,8 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
 from item_group.models import MenuItemGroup
@@ -147,3 +149,26 @@ class MenuItem(Item):
 
     def __str__(self):
         return self.name
+
+
+class TopAndRecommendedItem(models.Model):
+    menu_item = models.OneToOneField(
+        MenuItem,
+        on_delete=models.CASCADE,
+        related_name="special"
+    )
+    top = models.BooleanField(default=False)
+    recommended = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.menu_item.name
+
+    class Meta:
+        verbose_name = "Top and Recommended Item"
+        verbose_name_plural = "Top and Recommended Items"
+
+
+@receiver(post_save, sender=MenuItem)
+def create_menu_item_special(sender, instance, created, **kwargs):
+    if created:
+        TopAndRecommendedItem.objects.create(menu_item=instance)

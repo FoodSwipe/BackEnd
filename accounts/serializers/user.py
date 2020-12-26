@@ -4,7 +4,7 @@ from django.utils import timezone
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 
-from accounts.models import Profile
+from accounts.models import Profile, RegistrationMonthlyCount
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -194,3 +194,8 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
             "profile"
         ]
 
+
+class RegistrationMonthlyCountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegistrationMonthlyCount
+        fields = "__all__"
