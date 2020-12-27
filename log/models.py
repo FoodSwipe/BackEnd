@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-
 LOG_MODES_CHOICES = [
     ('create', 'Create'),
     ('update', 'Update'),
     ('delete', 'Delete'),
+    ('done', 'Done From Customer'),
     ('start', 'Delivery Started'),
     ('complete', 'Delivery Completed')
 ]

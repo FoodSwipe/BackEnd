@@ -1,10 +1,29 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from homepage_content.models import HomePageContent
-from homepage_content.serializer import HomePageContentSerializer, HomePageContentPOSTSerializer
+from homepage_content.serializer import (HomePageContentPOSTSerializer,
+                                         HomePageContentSerializer)
+
+
+class HomePageContentListView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request):
+        all_content = HomePageContent.objects.all()
+        serializer = HomePageContentSerializer(
+            instance=all_content,
+            many=True,
+            read_only=True,
+            context={"request": request}
+        )
+        return Response({
+            "results": serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 class HomepageContentViewSet(viewsets.ModelViewSet):

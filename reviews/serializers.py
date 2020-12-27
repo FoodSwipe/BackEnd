@@ -2,7 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
-from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
+from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
 from reviews.models import Review
 from utils.file import check_size
 

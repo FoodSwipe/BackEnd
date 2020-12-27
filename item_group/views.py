@@ -1,11 +1,13 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from item_group.models import MenuItemGroup
-from item_group.serializers import MenuItemGroupSerializer, MenuItemGroupPOSTSerializer, ItemGroupSerializer
+from item_group.serializers import (ItemGroupSerializer,
+                                    MenuItemGroupPOSTSerializer,
+                                    MenuItemGroupSerializer)
 from log.models import Log
 
 
@@ -35,6 +37,8 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
 
 
 class MenuItemGroupsWithItemListView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
 
     def get(self, request):
         try:

@@ -1,8 +1,8 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from reviews.models import Review
-from reviews.serializers import ReviewSerializer, ReviewPostSerializer
+from reviews.serializers import ReviewPostSerializer, ReviewSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

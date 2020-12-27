@@ -1,7 +1,7 @@
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
-from backend.settings import MAX_UPLOAD_IMAGE_SIZE, ALLOWED_IMAGES_EXTENSIONS
+from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
 from item.models import MenuItem
 from item_group.models import MenuItemGroup
 from log.models import Log

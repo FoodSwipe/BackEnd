@@ -4,9 +4,11 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from rest_framework import serializers
 
-from backend.settings import DELIVERY_START_PM, DELIVERY_START_AM, DELIVERY_CHARGE, LOYALTY_12_PER_FROM, \
-    LOYALTY_10_PER_FROM, LOYALTY_13_PER_FROM, LOYALTY_15_PER_FROM
-from cart.models import CartItem, Order, MonthlySalesReport
+from backend.settings import (DELIVERY_CHARGE, DELIVERY_START_AM,
+                              DELIVERY_START_PM, LOYALTY_10_PER_FROM,
+                              LOYALTY_12_PER_FROM, LOYALTY_13_PER_FROM,
+                              LOYALTY_15_PER_FROM)
+from cart.models import CartItem, MonthlySalesReport, Order
 from log.models import Log
 
 
@@ -122,7 +124,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         # check if pending order exists from customer side
         if isinstance(creator, AnonymousUser):
             try:
-                order = Order.objects.get(custom_contact=custom_contact, created_by=None, done_from_customer=False)
+                order = Order.objects.get(
+                    custom_contact=custom_contact,
+                    created_by=None,
+                    done_from_customer=False
+                )
                 raise serializers.ValidationError(
                     "Ongoing order exists at #{}. Please check your cart.".format(order.id))
             except Order.DoesNotExist:

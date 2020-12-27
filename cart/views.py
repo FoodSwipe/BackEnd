@@ -3,16 +3,18 @@ from collections import Counter
 
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cart.models import Order, CartItem, MonthlySalesReport
-from cart.serializers import OrderSerializer, OrderPOSTSerializer, CartItemSerializer, CartItemPOSTSerializer, \
-    OrderCreateSerializer, OrderWithCartListSerializer, RecentLocationsSerializer, UserTopItemsSerializer, \
-    SalesReportSerializer
+from cart.models import CartItem, MonthlySalesReport, Order
+from cart.serializers import (CartItemPOSTSerializer, CartItemSerializer,
+                              OrderCreateSerializer, OrderPOSTSerializer,
+                              OrderSerializer, OrderWithCartListSerializer,
+                              RecentLocationsSerializer, SalesReportSerializer,
+                              UserTopItemsSerializer)
 from item.models import MenuItem
 from log.models import Log
 from utils.helper import generate_url_for_media_resources
@@ -271,3 +273,32 @@ class SalesReportListView(APIView):
         return Response({
             "results": serializer.data
         }, status=status.HTTP_200_OK)
+
+
+class DoneFromCustomerView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
+    def patch(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            if order.done_from_customer:
+                return Response({
+                    "detail": "Order already set done."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                order.done_from_customer = True
+                order.save()
+                Log.objects.create(
+                    mode="done",
+                    actor=order.created_by,
+                    detail="Order #{} marked done from customer {} at {}".format(
+                        order.id, order.custom_contact, order.custom_location
+                    ))
+                return Response({
+                    "result": "Order sucessfully set to done."
+                }, status=status.HTTP_204_NO_CONTENT)
+        except Order.DoesNotExist:
+            return Response({
+                "detail": "Order does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)

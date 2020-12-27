@@ -13,7 +13,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import ResetPasswordCode
-from accounts.serializers.auth import UpdatePasswordSerializer, ResetPasswordEmailSerializer, ResetNewPasswordSerializer
+from accounts.serializers.auth import (ResetNewPasswordSerializer,
+                                       ResetPasswordEmailSerializer,
+                                       UpdatePasswordSerializer)
 
 
 class UpdatePassword(APIView):

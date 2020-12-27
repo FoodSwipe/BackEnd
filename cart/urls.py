@@ -1,8 +1,11 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from cart.views import CartItemViewSet, OrderViewSet, InitializeOrder, OrderWithCartListView, PartialUpdateOrderView, \
-    OrderWithCartItemsList, UserOrders, StorySummaryDetailView, SalesReportListView
+from cart.views import (CartItemViewSet, DoneFromCustomerView, InitializeOrder,
+                        OrderViewSet, OrderWithCartItemsList,
+                        OrderWithCartListView, PartialUpdateOrderView,
+                        SalesReportListView, StorySummaryDetailView,
+                        UserOrders)
 
 router = DefaultRouter()
 router.register(r'cart-item', CartItemViewSet, basename='cart-item')
@@ -18,5 +21,6 @@ urlpatterns += [
     path('update-order/<int:pk>', PartialUpdateOrderView.as_view(), name="update-order"),
     path('user/<int:pk>/orders', UserOrders.as_view(), name="user_orders"),
     path('user/<int:pk>/store-summary', StorySummaryDetailView.as_view(), name="user-store-summary"),
-    path('sales-report', SalesReportListView.as_view(), name="sales-report")
+    path('sales-report', SalesReportListView.as_view(), name="sales-report"),
+    path('done-from-customer/<int:pk>', DoneFromCustomerView.as_view(), name="done-from-customer"),
 ]

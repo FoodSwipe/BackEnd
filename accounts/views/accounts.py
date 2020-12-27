@@ -8,8 +8,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import RegistrationMonthlyCount
-from accounts.serializers.user import UserCreateSerializer, UserUpdateSerializer, RegisterUserSerializer, \
-    AddUserSerializer, UpdateUserSerializer, UserWithProfileSerializer, RegistrationMonthlyCountSerializer
+from accounts.serializers.user import (AddUserSerializer,
+                                       RegisterUserSerializer,
+                                       RegistrationMonthlyCountSerializer,
+                                       UpdateUserSerializer,
+                                       UserCreateSerializer,
+                                       UserUpdateSerializer,
+                                       UserWithProfileSerializer)
 from log.models import Log
 
 

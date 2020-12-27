@@ -1,14 +1,15 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from item.models import MenuItem, ItemType, TopAndRecommendedItem
-from item.serializers import MenuItemSerializer, MenuItemPOSTSerializer, ItemTypeSerializer, OrderNowListSerializer, \
-    TopAndRecommendedMenuItemPostSerializer, TopAndRecommendedMenuItemSerializer
+from item.models import ItemType, MenuItem, TopAndRecommendedItem
+from item.serializers import (ItemTypeSerializer, MenuItemPOSTSerializer,
+                              MenuItemSerializer, OrderNowListSerializer,
+                              TopAndRecommendedMenuItemPostSerializer,
+                              TopAndRecommendedMenuItemSerializer)
 from log.models import Log
-from utils.helper import generate_url_for_media_resources_in_object
 
 
 class MenuItemViewSet(viewsets.ModelViewSet):
@@ -53,6 +54,9 @@ class ItemTypeViewSet(viewsets.ModelViewSet):
 
 class OrderNowItemsListView(APIView):
 
+    authentication_classes = ()
+    permission_classes = ()
+
     def get(self, request):
         menu_items = MenuItem.objects.all().order_by("name")
         serializer = OrderNowListSerializer(
@@ -80,6 +84,9 @@ class TopRecommendedMenuItemViewSet(viewsets.ModelViewSet):
 
 
 class TopItemsListView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
     def get(self, request):
         all_items = TopAndRecommendedItem.objects.filter(top=True).order_by("-menu_item__created_at")
         serializer = TopAndRecommendedMenuItemSerializer(
@@ -94,6 +101,9 @@ class TopItemsListView(APIView):
 
 
 class RecommendedItemsListView(APIView):
+    authentication_classes = ()
+    permission_classes = ()
+
     def get(self, request):
         all_items = TopAndRecommendedItem.objects.filter(recommended=True).order_by("-menu_item__created_at")
         serializer = TopAndRecommendedMenuItemSerializer(

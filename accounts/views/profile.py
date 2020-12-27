@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
-from accounts.serializers.profile import ProfilePOSTSerializer, ProfileSerializer
+from accounts.serializers.profile import (ProfilePOSTSerializer,
+                                          ProfileSerializer)
 from utils.helper import generate_url_for_media_resources
 
 
