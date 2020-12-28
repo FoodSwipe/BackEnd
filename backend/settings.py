@@ -18,11 +18,13 @@ from dotenv import load_dotenv
 # load environment
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "accounts/templates")
-STATIC_DIR = "/home/foodswip/django/public/static_files"
-MEDIA_DIR = "/home/foodswip/django/public/static_media"
+
+# server specific project directory
+STATIC_DIR = os.getenv("STATIC_ABSOLUTE_DIR")
+MEDIA_DIR = os.getenv("MEDIA_ABSOLUTE_DIR")
 
 
 # Quick-start development settings - unsuitable for production
