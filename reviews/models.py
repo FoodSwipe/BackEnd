@@ -16,7 +16,7 @@ def upload_review_image_to(instance, filename):
     reviewed_item = instance.menu_item.name
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'review/{reviewer_contact}/{reviewed_item}/{filename}'
+    return f'review/{reviewer_contact[4:]}/{reviewed_item.replace(" ", "_")}/{filename}'
 
 
 class Review(models.Model):

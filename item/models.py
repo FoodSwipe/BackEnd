@@ -16,14 +16,14 @@ def upload_menu_item_media_to(instance, filename):
     item_name = instance.name
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'menu_item/{item_name}/{filename}'
+    return f'menu_item/{item_name.replace(" ", "_")}/{filename}'
 
 
 def upload_menu_type_badge_to(instance, filename):
     type_name = instance.name
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'item_badge/{type_name}/{filename}'
+    return f'item_badge/{type_name.replace(" ", "_")}/{filename}'
 
 
 class ItemType(models.Model):

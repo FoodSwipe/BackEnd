@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('birth_date', models.DateField(blank=True, null=True)),
                 ('address', models.CharField(blank=True, max_length=512, null=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(blank=True, null=True, upload_to=accounts.models.upload_posts_media_to, validators=[django.core.validators.FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'JPG', 'webp'])])),
+                ('image', models.ImageField(blank=True, null=True, upload_to=accounts.models.upload_user_media_to, validators=[django.core.validators.FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'JPG', 'webp'])])),
                 ('user', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],
             options={

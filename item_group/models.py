@@ -13,7 +13,7 @@ def upload_menu_item_group_media_to(instance, filename):
     item_name = instance.name
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'menu_item_group/{item_name}/{filename}'
+    return f'menu_item_group/{item_name.replace(" ", "_")}/{filename}'
 
 
 class MenuItemGroup(models.Model):

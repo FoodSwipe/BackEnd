@@ -13,7 +13,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from backend.settings import ALLOWED_IMAGES_EXTENSIONS, MAX_UPLOAD_IMAGE_SIZE
 
 
-def upload_posts_media_to(instance, filename):
+def upload_user_media_to(instance, filename):
     username = instance.user.username
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
@@ -34,7 +34,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=512, blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     image = models.ImageField(
-        upload_to=upload_posts_media_to,
+        upload_to=upload_user_media_to,
         null=True,
         blank=True,
         validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
