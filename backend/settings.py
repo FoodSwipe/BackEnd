@@ -19,7 +19,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "accounts/templates")
+STATIC_DIR = "/home/foodswip/django/public/static_files"
+MEDIA_DIR = "/home/foodswip/django/public/static_media"
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,6 +38,7 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://foodswipe.com.np",
 ]
 
 # Application definition
@@ -123,7 +127,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -162,14 +166,12 @@ TIME_ZONE = "Asia/Kathmandu"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/static/"
-
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_URL = "/backend/static/"
+STATIC_ROOT = STATIC_DIR
 
 # Media files
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-
-MEDIA_URL = "/media/"
+MEDIA_URL = "/backend/media/"
+MEDIA_ROOT = os.path.join(MEDIA_DIR).replace("\\", "/")
 
 # DJANGO PHONE NUMBER FIELD
 PHONENUMBER_DB_FORMAT = "NATIONAL"
