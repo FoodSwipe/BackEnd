@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import Profile
 from cart.models import CartItem, MonthlySalesReport, Order
 from cart.serializers import (CartItemPOSTSerializer, CartItemSerializer,
                               OrderCreateSerializer, OrderPOSTSerializer,
@@ -287,6 +288,41 @@ class DoneFromCustomerView(APIView):
                     "detail": "Order already set done."
                 }, status=status.HTTP_400_BAD_REQUEST)
             else:
+                if isinstance(request.user, get_user_model()):
+                    """
+                    If request user is already registered user
+                    then set order author as the request user
+                    """
+                    order.created_by = request.user
+                    order.save()
+                else:
+                    try:
+                        """
+                        If request user is anonymous and order custom_contact belongs
+                        to some user, then assign order to user found. 
+                        """
+                        profile = Profile.objects.get(contact=order.custom_contact)
+                        order.created_by = profile.user
+                        order.save()
+                    except Profile.DoesNotExist:
+                        """
+                        If request user is anonymous and order custom_contact is totally unique,
+                        then create a new user with the custom_contact and assign order author
+                        """
+                        user = get_user_model().objects.create(
+                            username="{}".format(str(order.custom_contact.national_number))
+                        )
+                        if order.custom_email:
+                            user.email = order.custom_email
+                        user.set_password(str(order.custom_contact.national_number))
+                        user.save()
+
+                        user.profile.contact = order.custom_contact
+                        user.save()
+
+                        order.created_by = user
+                        order.save()
+
                 order.done_from_customer = True
                 order.save()
                 Log.objects.create(

@@ -53,8 +53,8 @@ class Profile(models.Model):
         super().delete(using, keep_parents)
 
     class Meta:
-        verbose_name = "Customer Profile"
-        verbose_name_plural = "Customer Profiles"
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
 
 
 @receiver(post_save, sender=get_user_model())

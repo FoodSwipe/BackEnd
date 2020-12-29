@@ -17,7 +17,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_created_at(obj):
-        return obj.created_at.strftime("%Y/%m/%d %H:%M:%S")
+        return obj.created_at.strftime("%b %d, %Y %H:%M")
 
     class Meta:
         model = CartItem
@@ -143,7 +143,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 email = validated_data.get("custom_email", None)
                 if not email:
                     validated_data["custom_email"] = creator.email
-                return Order.objects.create(**validated_data)
+        return Order.objects.create(**validated_data)
 
 
 class OrderPOSTSerializer(serializers.ModelSerializer):
