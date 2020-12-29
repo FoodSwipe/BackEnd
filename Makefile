@@ -1,6 +1,6 @@
 SHELL=/bin/bash
-PYTHON=venv/bin/python3.8
-PIP=venv/bin/pip3.8
+PYTHON=python
+PIP=pip
 
 create-env:
 	python3.8 -m venv venv
