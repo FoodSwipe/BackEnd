@@ -18,14 +18,8 @@ from dotenv import load_dotenv
 # load environment
 load_dotenv()
 
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE_DIR = os.path.join(BASE_DIR, "accounts/templates")
-
-# server specific project directory
-STATIC_DIR = os.getenv("STATIC_ABSOLUTE_DIR")
-MEDIA_DIR = os.getenv("MEDIA_ABSOLUTE_DIR")
-
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -168,12 +162,14 @@ TIME_ZONE = "Asia/Kathmandu"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/backend/static/"
-STATIC_ROOT = STATIC_DIR
+STATIC_URL = "/static/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # Media files
-MEDIA_URL = "/backend/media/"
-MEDIA_ROOT = os.path.join(MEDIA_DIR).replace("\\", "/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+MEDIA_URL = "/media/"
 
 # DJANGO PHONE NUMBER FIELD
 PHONENUMBER_DB_FORMAT = "NATIONAL"
