@@ -8,7 +8,7 @@ from accounts.views.accounts import (AddUser, ListUser, RegisterUser,
 from accounts.views.login import LoginView, LogoutView
 from accounts.views.password import (ResetPasswordConfirm,
                                      ResetPasswordRequestCode, UpdatePassword)
-from accounts.views.profile import ListProfile, ListProfiles, ProfileDetail
+from accounts.views.profile import ListProfile, ListProfiles, ProfileDetail, UserProfileContactListView
 
 app_name = "accounts"
 
@@ -28,5 +28,6 @@ urlpatterns = [
     path("user/update-password", UpdatePassword.as_view(), name="update-password"),
     path("user/reset-password", ResetPasswordRequestCode.as_view(), name="reset-password-request"),
     path("user/reset-password/<str:code>/", ResetPasswordConfirm.as_view(), name="reset-password-confirm"),
-    path("registration-summary", RegistrationSummaryListView.as_view(), name="registration-summary")
+    path("registration-summary", RegistrationSummaryListView.as_view(), name="registration-summary"),
+    path("list-user-contacts", UserProfileContactListView.as_view(), name="profile-contact-filter")
 ]

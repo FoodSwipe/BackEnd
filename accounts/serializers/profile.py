@@ -14,3 +14,9 @@ class ProfilePOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+
+
+class ProfileContactOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["contact"]

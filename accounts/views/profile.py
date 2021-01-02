@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from accounts.serializers.profile import (ProfilePOSTSerializer,
-                                          ProfileSerializer)
+                                          ProfileSerializer, ProfileContactOnlySerializer)
 from utils.helper import generate_url_for_media_resources
 
 
@@ -80,3 +80,10 @@ class ProfileDetail(APIView):
                 "data"   : ProfileSerializer(self.get_object(pk)).data
             }, status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileContactListView(generics.ListAPIView):
+    serializer_class = ProfileContactOnlySerializer
+
+    def get_queryset(self):
+        return Profile.objects.all().order_by("user__date_joined")
