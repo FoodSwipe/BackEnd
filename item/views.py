@@ -15,8 +15,6 @@ from log.models import Log
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all().order_by('created_at')
     serializer_class = MenuItemSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == "create" or self.action == "update":

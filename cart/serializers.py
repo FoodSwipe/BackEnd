@@ -4,12 +4,9 @@ from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
 from rest_framework import serializers
 
-from backend.settings import (DELIVERY_CHARGE, DELIVERY_START_AM,
-                              DELIVERY_START_PM, LOYALTY_10_PER_FROM,
-                              LOYALTY_12_PER_FROM, LOYALTY_13_PER_FROM,
-                              LOYALTY_15_PER_FROM)
 from cart.models import CartItem, MonthlySalesReport, Order
 from log.models import Log
+from utils.helper import get_delivery_charge, get_loyalty_discount
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -32,10 +29,8 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
         extra_kwargs = {"order": {"write_only": True}}
 
     def create(self, validated_data):
-        current_hour = int(timezone.datetime.now().strftime("%H"))
-
         try:
-            check = validated_data["quantity"]
+            validated_data["quantity"]
         except KeyError:
             validated_data["quantity"] = 1
 
@@ -50,27 +45,19 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
         item_base_order.total_items += int(validated_data["quantity"])
         item_base_order.total_price += cart_item.price * int(validated_data["quantity"])
 
-        if current_hour >= DELIVERY_START_PM or current_hour <= DELIVERY_START_AM:
-            item_base_order.delivery_charge = DELIVERY_CHARGE
+        item_base_order.delivery_charge = get_delivery_charge()
 
-        if LOYALTY_10_PER_FROM <= item_base_order.total_price < LOYALTY_12_PER_FROM:
-            item_base_order.loyalty_discount = 10
-        elif LOYALTY_12_PER_FROM <= item_base_order.total_price < LOYALTY_13_PER_FROM:
-            item_base_order.loyalty_discount = 12
-        elif LOYALTY_13_PER_FROM <= item_base_order.total_price < LOYALTY_15_PER_FROM:
-            item_base_order.loyalty_discount = 13
-        elif item_base_order.total_price >= LOYALTY_15_PER_FROM:
-            item_base_order.loyalty_discount = 15
+        item_base_order.loyalty_discount = get_loyalty_discount(item_base_order.total_price)
 
         item_base_order.grand_total = \
             item_base_order.total_price + item_base_order.delivery_charge - \
             decimal.Decimal(item_base_order.loyalty_discount / 100) * item_base_order.total_price
 
         item_base_order.save()
+
         return CartItem.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        current_hour = int(timezone.datetime.now().strftime("%H"))
         if instance.quantity != validated_data["quantity"]:
             instance.order.total_items -= instance.quantity
             instance.order.total_items += validated_data["quantity"]
@@ -78,17 +65,9 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
             instance.order.total_price -= instance.quantity * instance.item.price
             instance.order.total_price += instance.item.price * int(validated_data["quantity"])
 
-            if current_hour >= DELIVERY_START_PM or current_hour <= DELIVERY_START_AM:
-                instance.order.delivery_charge = DELIVERY_CHARGE
+            instance.order.delivery_charge = get_delivery_charge()
 
-            if LOYALTY_10_PER_FROM <= instance.order.total_price < LOYALTY_12_PER_FROM:
-                instance.order.loyalty_discount = 10
-            elif LOYALTY_12_PER_FROM <= instance.order.total_price < LOYALTY_13_PER_FROM:
-                instance.order.loyalty_discount = 12
-            elif LOYALTY_13_PER_FROM <= instance.order.total_price < LOYALTY_15_PER_FROM:
-                instance.order.loyalty_discount = 13
-            elif instance.order.total_price >= LOYALTY_15_PER_FROM:
-                instance.order.loyalty_discount = 15
+            instance.order.loyalty_discount = get_loyalty_discount(instance.order.total_price)
 
             instance.order.grand_total = \
                 instance.order.total_price + instance.order.delivery_charge - \
@@ -130,7 +109,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                     done_from_customer=False
                 )
                 raise serializers.ValidationError(
-                    "Ongoing order exists at #{}. Please check your cart.".format(order.id))
+                    "Ongoing order exists at #{}. Please check your cart.".format(order.id)
+                )
             except Order.DoesNotExist:
                 validated_data["created_by"] = None
         else:
@@ -160,6 +140,24 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         is_delivery_started = validated_data.get("delivery_started", instance.delivery_started)
         is_delivered = validated_data.get("is_delivered", instance.is_delivered)
         done_from_customer = validated_data.get("done_from_customer", instance.done_from_customer)
+        delivery_charge = validated_data.get("delivery_charge", instance.delivery_charge)
+        loyalty_discount = validated_data.get("loyalty_discount", instance.loyalty_discount)
+
+        cart_items = CartItem.objects.filter(order=instance)
+        calc_total_quantity = 0
+        calc_total_price = 0
+        for item in cart_items:
+            calc_total_price += item.quantity * item.item.price
+            calc_total_quantity += item.quantity
+
+        instance.total_price = calc_total_price
+
+        # use delivery charge and loyalty discount from request data
+        instance.grand_total = \
+            calc_total_price + int(delivery_charge) - decimal.Decimal(loyalty_discount / 100) * calc_total_price
+
+        instance.save()
+
         if done_from_customer:
             Log.objects.get_or_create(
                 mode="complete",
@@ -181,7 +179,8 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
             Log.objects.get_or_create(
                 mode="complete",
                 actor=self.context['request'].user,
-                detail="Delivery completed for order #{} by {}".format(instance.id, self.context['request'].user.username)
+                detail="Delivery completed for order #{} by {}".format(instance.id,
+                                                                       self.context['request'].user.username)
             )
         return super().update(instance, validated_data)
 
