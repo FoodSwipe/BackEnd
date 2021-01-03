@@ -20,4 +20,4 @@ class Transaction(models.Model):
     )
 
     def __str__(self):
-        return "{} -- Transaction #{}".format(self.created_by, self.pk)
+        return "{} -- Transaction #{}".format(self.order.created_by, self.pk)
