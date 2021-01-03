@@ -235,7 +235,8 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
             "updated_at",
             "created_by",
             "updated_by",
-            "cart_items"
+            "cart_items",
+            "payment_type",
         ]
         depth = 1
 

@@ -168,9 +168,7 @@ STATIC_ROOT = STATIC_DIR
 
 # Media files
 MEDIA_DIR = os.getenv("MEDIA_ABSOLUTE_DIR") if os.getenv("ENV") == 'PRODUCTION' else os.path.join(BASE_DIR, "media/")
-
 MEDIA_ROOT = MEDIA_DIR
-
 MEDIA_URL = os.getenv("MEDIA_URL")
 
 # DJANGO PHONE NUMBER FIELD
