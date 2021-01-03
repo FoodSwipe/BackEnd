@@ -1,9 +1,17 @@
 from rest_framework import serializers
 
+from cart.serializers import OrderWithCartListSerializer
 from transaction.models import Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+    order = OrderWithCartListSerializer()
+
+    @staticmethod
+    def get_created_at(obj):
+        return obj.created_at.strftime("%b %d, %Y %H:%M")
+
     class Meta:
         model = Transaction
         fields = "__all__"
