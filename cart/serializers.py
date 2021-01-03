@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 from cart.models import CartItem, MonthlySalesReport, Order
 from log.models import Log
+from transaction.models import Transaction
 from utils.helper import get_delivery_charge, get_loyalty_discount
 
 
@@ -182,6 +183,11 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
                 detail="Delivery completed for order #{} by {}".format(instance.id,
                                                                        self.context['request'].user.username)
             )
+            Transaction.objects.create(
+                order=instance,
+                grand_total=instance.grand_total,
+                created_by=self.context['request'].user,
+            )
         return super().update(instance, validated_data)
 
 
@@ -235,7 +241,8 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
             "updated_at",
             "created_by",
             "updated_by",
-            "cart_items"
+            "cart_items",
+            "payment_type",
         ]
         depth = 1
 
