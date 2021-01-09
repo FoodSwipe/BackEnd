@@ -85,3 +85,19 @@ class MonthlySalesReport(models.Model):
     )
     sale_count = models.PositiveBigIntegerField(null=True)
     date = models.CharField(max_length=7)
+
+
+class OrderKOT(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_kot")
+    cart_item = models.ForeignKey(MenuItem, on_delete=models.DO_NOTHING, related_name="kot_menu_item")
+    quantity = models.PositiveBigIntegerField()
+    batch = models.PositiveBigIntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Order: #{}, Batch: {}".format(self.order.id, self.batch)
+
+    class Meta:
+        unique_together = [
+            ["order", "cart_item", "batch"]
+        ]
