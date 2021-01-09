@@ -92,7 +92,7 @@ class ListUser(APIView):
         Return a list of all users.
         """
         users = get_user_model().objects.all()
-        return Response(UserCreateSerializer(users, many=True).data, status=status.HTTP_200_OK)
+        return Response(UserWithProfileSerializer(users, many=True).data, status=status.HTTP_200_OK)
 
     @staticmethod
     def post(request):
@@ -126,7 +126,8 @@ class UserDetail(APIView):
         Returns single user by pk
         """
         user = self.get_object(pk)
-        return Response(UserCreateSerializer(user).data, status=status.HTTP_200_OK)
+        serializer = UserWithProfileSerializer(instance=user, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         """

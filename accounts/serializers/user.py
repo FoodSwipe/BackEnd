@@ -174,8 +174,10 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_last_login(obj):
-        if obj.last_login: return '{} days ago'.format((timezone.datetime.now() - obj.last_login).days)
-        else: return None
+        if obj.last_login:
+            return '{} days ago'.format((timezone.datetime.now() - obj.last_login).days)
+        else:
+            return None
 
     @staticmethod
     def get_date_joined(obj):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cart.serializers import OrderWithCartListSerializer
+from cart.serializers.order import OrderWithCartListSerializer
 from transaction.models import Transaction
 
 

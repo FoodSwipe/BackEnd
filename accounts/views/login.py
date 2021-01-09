@@ -8,10 +8,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.serializers.auth import LoginSerializer, LogoutSerializer
-from accounts.serializers.user import (UserCreateSerializer,
-                                       UserWithProfileSerializer)
+from accounts.serializers.user import UserWithProfileSerializer
 from cart.models import Order
-from cart.serializers import OrderSerializer
+from cart.serializers.order import OrderSerializer
 
 
 class LoginView(APIView):
