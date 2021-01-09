@@ -22,12 +22,15 @@ class LoginView(APIView):
         """
         user_serializer = LoginSerializer(data=request.data)
         if user_serializer.is_valid():
-            username = user_serializer.data['username']
-            password = user_serializer.data['password']
+            username = user_serializer.data["username"]
+            password = user_serializer.data["password"]
             try:
                 get_user_model().objects.get(username=username)
             except get_user_model().DoesNotExist:
-                return Response({"detail": "User '" + username + "' Not Found!"}, status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {"detail": "User '" + username + "' Not Found!"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
             user = authenticate(username=username, password=password)
             if user:
                 user.last_login = timezone.now()
@@ -38,24 +41,29 @@ class LoginView(APIView):
                 token, created = Token.objects.get_or_create(user=user)
 
                 # check if the user has pending order
-                pending_order = Order.objects \
-                    .filter(created_by=user, done_from_customer=False) \
-                    .order_by("-created_at").first()
+                pending_order = (
+                    Order.objects.filter(created_by=user, done_from_customer=False)
+                    .order_by("-created_at")
+                    .first()
+                )
                 if pending_order:
                     order_serializer = OrderSerializer(instance=pending_order)
-                    return Response({
-                        "token": token.key,
-                        "cooking_order": order_serializer.data,
-                        "user": user_serializer.data
-                    }, status=status.HTTP_202_ACCEPTED)
+                    return Response(
+                        {
+                            "token": token.key,
+                            "cooking_order": order_serializer.data,
+                            "user": user_serializer.data,
+                        },
+                        status=status.HTTP_202_ACCEPTED,
+                    )
                 else:
-                    return Response({
-                        "token": token.key,
-                        "user" : user_serializer.data
-                    }, status=status.HTTP_202_ACCEPTED)
+                    return Response(
+                        {"token": token.key, "user": user_serializer.data},
+                        status=status.HTTP_202_ACCEPTED,
+                    )
             return Response(
                 {"detail": "Login Failed! Provide Valid Authentication Credentials."},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -76,22 +84,33 @@ class LogoutView(APIView):
             try:
                 user = get_user_model().objects.get(username=username)
                 if not user.is_authenticated:
-                    return Response({
-                        "detail": "User not logged in."
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        {"detail": "User not logged in."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 logout(request)
                 try:
                     token = Token.objects.get(user=user)
                     token.delete()
-                    return Response({
-                        "detail": "User member '{}' logged out successfully.".format(user.username)
-                    }, status=status.HTTP_204_NO_CONTENT)
+                    return Response(
+                        {
+                            "detail": "User member '{}' logged out successfully.".format(
+                                user.username
+                            )
+                        },
+                        status=status.HTTP_204_NO_CONTENT,
+                    )
                 except Token.DoesNotExist:
-                    return Response({
-                        "detail": "User '{}' logged out successfully.".format(user.username)
-                    }, status=status.HTTP_204_NO_CONTENT)
+                    return Response(
+                        {
+                            "detail": "User '{}' logged out successfully.".format(
+                                user.username
+                            )
+                        },
+                        status=status.HTTP_204_NO_CONTENT,
+                    )
             except get_user_model().DoesNotExist:
-                return Response({
-                    "detail": "User not found."
-                }, status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND
+                )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

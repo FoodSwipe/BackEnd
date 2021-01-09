@@ -8,12 +8,21 @@ from accounts.models import Profile, ResetPasswordCode
 class UserAdmin(BaseUserAdmin):
     save_on_top = True
     list_display = (
-        "id", "username", "email",
-        "is_superuser", "is_staff", "is_active", "date_joined"
+        "id",
+        "username",
+        "email",
+        "is_superuser",
+        "is_staff",
+        "is_active",
+        "date_joined",
     )
     ordering = (
-        "username", "email",
-        "is_superuser", "is_staff", "is_active", "date_joined"
+        "username",
+        "email",
+        "is_superuser",
+        "is_staff",
+        "is_active",
+        "date_joined",
     )
     sortable_by = ("username",)
     search_fields = ("username", "email")
@@ -27,37 +36,44 @@ class UserAdmin(BaseUserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = (
-        "id", "user", "full_name", "bio", "contact", "birth_date",
-        "address", "last_updated",
+        "id",
+        "user",
+        "full_name",
+        "bio",
+        "contact",
+        "birth_date",
+        "address",
+        "last_updated",
     )
     ordering = (
-        "user", "full_name", "bio", "contact", "birth_date",
-        "address", "last_updated",
+        "user",
+        "full_name",
+        "bio",
+        "contact",
+        "birth_date",
+        "address",
+        "last_updated",
     )
     list_filter = (
         ("user__date_joined", admin.DateFieldListFilter),
         ("last_updated", admin.DateFieldListFilter),
     )
     date_hierarchy = "user__date_joined"
-    search_fields = (
-        "user__username", "contact",
-        "address", "full_name"
-    )
+    search_fields = ("user__username", "contact", "address", "full_name")
     autocomplete_fields = ["user"]
 
     fieldsets = (
-        ("Personal Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields" : (
-                "full_name", "contact", "bio", "birth_date", "image"
-            )
-        }),
-        ("Location Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields" : (
-                "address",
-            )
-        })
+        (
+            "Personal Information",
+            {
+                "classes": ("wide", "extrapretty"),
+                "fields": ("full_name", "contact", "bio", "birth_date", "image"),
+            },
+        ),
+        (
+            "Location Information",
+            {"classes": ("wide", "extrapretty"), "fields": ("address",)},
+        ),
     )
     list_per_page = 10
 

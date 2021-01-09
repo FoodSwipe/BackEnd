@@ -23,7 +23,9 @@ class UpdatePasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data["new_password"] != data["confirm_password"]:
-            raise serializers.ValidationError("New password must match with confirm password.")
+            raise serializers.ValidationError(
+                "New password must match with confirm password."
+            )
         if data["confirm_password"] == data["password"]:
             raise serializers.ValidationError("New and old password must not be same.")
         return data
@@ -44,5 +46,7 @@ class ResetNewPasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data["new_password"] != data["confirm_password"]:
-            raise serializers.ValidationError("New password must match with confirm password.")
+            raise serializers.ValidationError(
+                "New password must match with confirm password."
+            )
         return data

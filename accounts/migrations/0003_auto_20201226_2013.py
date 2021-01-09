@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0002_registrationmonthlycount'),
+        ("accounts", "0002_registrationmonthlycount"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='registrationmonthlycount',
-            name='month',
-            field=models.CharField(default='', max_length=12),
+            model_name="registrationmonthlycount",
+            name="month",
+            field=models.CharField(default="", max_length=12),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='registrationmonthlycount',
-            name='year',
+            model_name="registrationmonthlycount",
+            name="year",
             field=models.CharField(default=0, max_length=4),
             preserve_default=False,
         ),
         migrations.AlterUniqueTogether(
-            name='registrationmonthlycount',
-            unique_together={('year', 'month')},
+            name="registrationmonthlycount",
+            unique_together={("year", "month")},
         ),
         migrations.RemoveField(
-            model_name='registrationmonthlycount',
-            name='date',
+            model_name="registrationmonthlycount",
+            name="date",
         ),
     ]

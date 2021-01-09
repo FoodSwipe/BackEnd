@@ -7,9 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
-from accounts.serializers.profile import (ProfileContactOnlySerializer,
-                                          ProfilePOSTSerializer,
-                                          ProfileSerializer)
+from accounts.serializers.profile import (
+    ProfileContactOnlySerializer,
+    ProfilePOSTSerializer,
+    ProfileSerializer,
+)
 from utils.helper import generate_url_for_media_resources
 
 
@@ -62,10 +64,13 @@ class ProfileDetail(APIView):
         serializer = ProfilePOSTSerializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                "message": "Profile updated successfully.",
-                "data"   : ProfileSerializer(self.get_object(pk)).data
-            }, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {
+                    "message": "Profile updated successfully.",
+                    "data": ProfileSerializer(self.get_object(pk)).data,
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, pk):
@@ -76,10 +81,13 @@ class ProfileDetail(APIView):
         serializer = ProfilePOSTSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                "message": "Profile patched successfully.",
-                "data"   : ProfileSerializer(self.get_object(pk)).data
-            }, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {
+                    "message": "Profile patched successfully.",
+                    "data": ProfileSerializer(self.get_object(pk)).data,
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

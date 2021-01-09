@@ -14,7 +14,15 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["full_name", "last_name", "username", "email", "password", "contact", "address"]
+        fields = [
+            "full_name",
+            "last_name",
+            "username",
+            "email",
+            "password",
+            "contact",
+            "address",
+        ]
 
     @staticmethod
     def validate_full_name(full_name):
@@ -47,7 +55,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         user = get_user_model().objects.create(
             username=validated_data["username"],
             password=validated_data["password"],
-            email=validated_data["email"]
+            email=validated_data["email"],
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -74,13 +82,21 @@ class AddUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["full_name", "username", "email", "password", "contact", "address", "birth_date"]
+        fields = [
+            "full_name",
+            "username",
+            "email",
+            "password",
+            "contact",
+            "address",
+            "birth_date",
+        ]
 
     def create(self, validated_data):
         user = get_user_model().objects.create(
             username=validated_data["username"],
             password=validated_data["password"],
-            email=validated_data["email"]
+            email=validated_data["email"],
         )
         user.set_password(validated_data["password"])
         user.save()
@@ -123,7 +139,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
         # do not create admins from this api
         read_only_fields = ["is_active", "date_joined", "is_superuser", "is_staff"]
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {"password": {"write_only": True}}
 
     @staticmethod
     def validate_password(password):
@@ -153,7 +169,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "birth_date",
             "address",
             "last_updated",
-            "image"
+            "image",
         ]
 
 
@@ -175,13 +191,13 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_last_login(obj):
         if obj.last_login:
-            return '{} days ago'.format((timezone.datetime.now() - obj.last_login).days)
+            return "{} days ago".format((timezone.datetime.now() - obj.last_login).days)
         else:
             return None
 
     @staticmethod
     def get_date_joined(obj):
-        return '{} days ago'.format((timezone.datetime.now() - obj.date_joined).days)
+        return "{} days ago".format((timezone.datetime.now() - obj.date_joined).days)
 
     class Meta:
         model = get_user_model()
@@ -193,7 +209,7 @@ class UserWithProfileSerializer(serializers.ModelSerializer):
             "staff",
             "date_joined",
             "last_login",
-            "profile"
+            "profile",
         ]
 
 

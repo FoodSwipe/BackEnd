@@ -1,7 +1,6 @@
 import os
 
-from django.contrib.auth import (authenticate, get_user_model,
-                                 update_session_auth_hash)
+from django.contrib.auth import authenticate, get_user_model, update_session_auth_hash
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -13,9 +12,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import ResetPasswordCode
-from accounts.serializers.auth import (ResetNewPasswordSerializer,
-                                       ResetPasswordEmailSerializer,
-                                       UpdatePasswordSerializer)
+from accounts.serializers.auth import (
+    ResetNewPasswordSerializer,
+    ResetPasswordEmailSerializer,
+    UpdatePasswordSerializer,
+)
 
 
 class UpdatePassword(APIView):
@@ -27,7 +28,9 @@ class UpdatePassword(APIView):
         """
         Update password for authenticated user
         """
-        serializer = UpdatePasswordSerializer(data=request.data, context={'request': request})
+        serializer = UpdatePasswordSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid(raise_exception=True):
             username = request.user.username
             password = serializer.validated_data["password"]
@@ -42,16 +45,22 @@ class UpdatePassword(APIView):
                     token = Token.objects.get(user=user)
                     token.delete()
                     update_session_auth_hash(request, request.user)
-                    return Response({"message": "Update password success."}, status=status.HTTP_204_NO_CONTENT)
+                    return Response(
+                        {"message": "Update password success."},
+                        status=status.HTTP_204_NO_CONTENT,
+                    )
                 else:
-                    return Response({"detail": "Wrong existing password."}, status=status.HTTP_403_FORBIDDEN)
+                    return Response(
+                        {"detail": "Wrong existing password."},
+                        status=status.HTTP_403_FORBIDDEN,
+                    )
             except get_user_model().DoesNotExist:
-                return Response({"detail": "User does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"detail": "User does not exist."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         else:
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResetPasswordRequestCode(APIView):
@@ -70,28 +79,37 @@ class ResetPasswordRequestCode(APIView):
                 user = get_user_model().objects.get(email=email)
 
                 current_site = get_current_site(request)
-                code_object, created = ResetPasswordCode.objects.get_or_create(user=user)
+                code_object, created = ResetPasswordCode.objects.get_or_create(
+                    user=user
+                )
                 if not created:
                     code_object.delete()
                     code_object = ResetPasswordCode.objects.create(user=user)
                 code = code_object.code
                 mail_subject = "Reset user password"
-                message = render_to_string("reset_email.html", {
-                    "user"  : user.username,
-                    "domain": current_site.domain,
-                    "code"  : code,
-                })
+                message = render_to_string(
+                    "reset_email.html",
+                    {
+                        "user": user.username,
+                        "domain": current_site.domain,
+                        "code": code,
+                    },
+                )
                 send_mail(
                     mail_subject,
                     message="ResetPassword",
                     from_email=os.getenv("HOST_EMAIL"),
                     recipient_list=[email],
-                    html_message=message
+                    html_message=message,
                 )
-                return Response({"detail": "Reset-password link sent to provided mail address."},
-                                status=status.HTTP_202_ACCEPTED)
+                return Response(
+                    {"detail": "Reset-password link sent to provided mail address."},
+                    status=status.HTTP_202_ACCEPTED,
+                )
             except get_user_model().DoesNotExist:
-                return Response({"detail": "User not found."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"detail": "User not found."}, status=status.HTTP_400_BAD_REQUEST
+                )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -99,6 +117,7 @@ class ResetPasswordConfirm(APIView):
     """
     Reset Password Confirm
     """
+
     permission_classes = ()
     authentication_classes = ()
 
@@ -113,8 +132,12 @@ class ResetPasswordConfirm(APIView):
                 user.set_password(password)
                 user.save()
                 reset_password_code.delete()
-                return Response({"message": "Reset password success."}, status=status.HTTP_200_OK)
+                return Response(
+                    {"message": "Reset password success."}, status=status.HTTP_200_OK
+                )
             except ResetPasswordCode.DoesNotExist:
-                return Response({"detail": "Code not found."}, status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {"detail": "Code not found."}, status=status.HTTP_404_NOT_FOUND
+                )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

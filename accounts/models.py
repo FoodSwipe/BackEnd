@@ -17,7 +17,7 @@ def upload_user_media_to(instance, filename):
     username = instance.user.username
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'profile/{username}/{filename}'
+    return f"profile/{username}/{filename}"
 
 
 class Profile(models.Model):
@@ -25,7 +25,7 @@ class Profile(models.Model):
         get_user_model(),
         on_delete=models.CASCADE,
         editable=False,
-        related_name="profile"
+        related_name="profile",
     )
     full_name = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(null=True, blank=True, max_length=1024)
@@ -37,11 +37,11 @@ class Profile(models.Model):
         upload_to=upload_user_media_to,
         null=True,
         blank=True,
-        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)],
     )
 
     def __str__(self):
-        return self.user.username + ' Profile'
+        return self.user.username + " Profile"
 
     def clean(self):
         if self.image and self.image.size / 1000 > MAX_UPLOAD_IMAGE_SIZE:

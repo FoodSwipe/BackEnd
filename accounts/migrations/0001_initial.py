@@ -21,31 +21,87 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ResetPasswordCode',
+            name="ResetPasswordCode",
             fields=[
-                ('code', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "code",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Reset Password Codes',
+                "verbose_name_plural": "Reset Password Codes",
             },
         ),
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('full_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('bio', models.TextField(blank=True, max_length=1024, null=True)),
-                ('contact', phonenumber_field.modelfields.PhoneNumberField(max_length=128, null=True, region=None, unique=True)),
-                ('birth_date', models.DateField(blank=True, null=True)),
-                ('address', models.CharField(blank=True, max_length=512, null=True)),
-                ('last_updated', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(blank=True, null=True, upload_to=accounts.models.upload_user_media_to, validators=[django.core.validators.FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'JPG', 'webp'])])),
-                ('user', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("full_name", models.CharField(blank=True, max_length=255, null=True)),
+                ("bio", models.TextField(blank=True, max_length=1024, null=True)),
+                (
+                    "contact",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, null=True, region=None, unique=True
+                    ),
+                ),
+                ("birth_date", models.DateField(blank=True, null=True)),
+                ("address", models.CharField(blank=True, max_length=512, null=True)),
+                ("last_updated", models.DateTimeField(auto_now=True)),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=accounts.models.upload_user_media_to,
+                        validators=[
+                            django.core.validators.FileExtensionValidator(
+                                [
+                                    "png",
+                                    "jpg",
+                                    "jpeg",
+                                    "gif",
+                                    "bmp",
+                                    "tiff",
+                                    "JPG",
+                                    "webp",
+                                ]
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        editable=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Customer Profile',
-                'verbose_name_plural': 'Customer Profiles',
+                "verbose_name": "Customer Profile",
+                "verbose_name_plural": "Customer Profiles",
             },
         ),
     ]
