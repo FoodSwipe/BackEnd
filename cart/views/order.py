@@ -7,8 +7,9 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from cart.models import Order
-from cart.serializers.order import OrderWithCartListSerializer, OrderCreateSerializer, OrderSerializer, \
-    OrderPOSTSerializer
+from cart.serializers.order import (OrderCreateSerializer, OrderPOSTSerializer,
+                                    OrderSerializer,
+                                    OrderWithCartListSerializer)
 from log.models import Log
 
 

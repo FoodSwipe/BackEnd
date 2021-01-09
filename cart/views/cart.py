@@ -1,8 +1,8 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from cart.models import CartItem
-from cart.serializers.cart import CartItemSerializer, CartItemPOSTSerializer
+from cart.serializers.cart import CartItemPOSTSerializer, CartItemSerializer
 
 
 class CartItemViewSet(viewsets.ModelViewSet):

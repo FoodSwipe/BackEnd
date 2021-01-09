@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import status, generics
+from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
-from accounts.serializers.profile import (ProfilePOSTSerializer,
-                                          ProfileSerializer, ProfileContactOnlySerializer)
+from accounts.serializers.profile import (ProfileContactOnlySerializer,
+                                          ProfilePOSTSerializer,
+                                          ProfileSerializer)
 from utils.helper import generate_url_for_media_resources
 
 

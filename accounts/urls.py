@@ -8,7 +8,8 @@ from accounts.views.accounts import (AddUser, ListUser, RegisterUser,
 from accounts.views.login import LoginView, LogoutView
 from accounts.views.password import (ResetPasswordConfirm,
                                      ResetPasswordRequestCode, UpdatePassword)
-from accounts.views.profile import ListProfile, ListProfiles, ProfileDetail, UserProfileContactListView
+from accounts.views.profile import (ListProfile, ListProfiles, ProfileDetail,
+                                    UserProfileContactListView)
 
 app_name = "accounts"
 

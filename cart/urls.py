@@ -3,9 +3,11 @@ from rest_framework.routers import DefaultRouter
 
 from cart.views.cart import CartItemViewSet
 from cart.views.kot import OrderKotViewSet
-from cart.views.order import OrderViewSet, OrderWithCartItemsList, InitializeOrder, OrderWithCartListView, \
-    PartialUpdateOrderView, UserOrders, DoneFromCustomerView
-from cart.views.report import StorySummaryDetailView, SalesReportListView
+from cart.views.order import (DoneFromCustomerView, InitializeOrder,
+                              OrderViewSet, OrderWithCartItemsList,
+                              OrderWithCartListView, PartialUpdateOrderView,
+                              UserOrders)
+from cart.views.report import SalesReportListView, StorySummaryDetailView
 
 router = DefaultRouter()
 router.register(r'cart-item', CartItemViewSet, basename='cart-item')

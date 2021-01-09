@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser
 from phonenumbers import timezone
 from rest_framework import serializers
 
-from cart.models import Order, CartItem
+from cart.models import CartItem, Order
 from cart.serializers.cart import CartItemSerializer
 from log.models import Log
 from transaction.models import Transaction
