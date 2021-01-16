@@ -6,7 +6,7 @@ from django.urls import include, path
 from django.views.static import serve
 
 urlpatterns = [
-    path('', admin.site.urls),
+    path("", admin.site.urls),
     path("select2/", include("django_select2.urls")),
     url(r"^api-auth/", include("rest_framework.urls")),
     path("api/", include("accounts.urls")),
@@ -17,7 +17,7 @@ urlpatterns = [
     path("api/", include("reviews.urls")),
     path("api/", include("homepage_content.urls")),
     path("api/", include("log.urls")),
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
+    url(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
