@@ -10,7 +10,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
 
     def get_serializer_class(self):
-        if self.action == "create" or self.action == "update" or self.action == "partial_update":
+        if self.action in ["create", "partial_update", "update"]:
             return CartItemPOSTSerializer
         return super(CartItemViewSet, self).get_serializer_class()
 

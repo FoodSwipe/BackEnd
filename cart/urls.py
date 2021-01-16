@@ -2,28 +2,46 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from cart.views.cart import CartItemViewSet
-from cart.views.kot import OrderKotViewSet
-from cart.views.order import (DoneFromCustomerView, InitializeOrder,
-                              OrderViewSet, OrderWithCartItemsList,
-                              OrderWithCartListView, PartialUpdateOrderView,
-                              UserOrders)
+from cart.views.kot import OrderKotViewSet, KotListView
+from cart.views.order import (
+    DoneFromCustomerView,
+    InitializeOrder,
+    OrderViewSet,
+    OrderWithCartItemsList,
+    OrderWithCartListView,
+    PartialUpdateOrderView,
+    UserOrders,
+    )
 from cart.views.report import SalesReportListView, StorySummaryDetailView
 
 router = DefaultRouter()
-router.register(r'cart-item', CartItemViewSet, basename='cart-item')
-router.register(r'order', OrderViewSet, basename='order')
-router.register(r'order', OrderKotViewSet, basename='order-kot')
+router.register(r"cart", CartItemViewSet, basename="cart-item")
+router.register(r"order", OrderViewSet, basename="order")
+router.register(r"order-kot", OrderKotViewSet, basename="order-kot")
 urlpatterns = router.urls
 
 app_name = "cart"
 
 urlpatterns += [
-    path('orders', OrderWithCartItemsList.as_view(), name='orders-list'),
-    path('init-order', InitializeOrder.as_view(), name='initialize-order'),
-    path('order/<int:pk>/cart', OrderWithCartListView.as_view(), name='initialize-order'),
-    path('update-order/<int:pk>', PartialUpdateOrderView.as_view(), name="update-order"),
-    path('user/<int:pk>/orders', UserOrders.as_view(), name="user_orders"),
-    path('user/<int:pk>/store-summary', StorySummaryDetailView.as_view(), name="user-store-summary"),
-    path('sales-report', SalesReportListView.as_view(), name="sales-report"),
-    path('done-from-customer/<int:pk>', DoneFromCustomerView.as_view(), name="done-from-customer"),
-]
+    path("orders", OrderWithCartItemsList.as_view(), name="orders-list"),
+    path("init-order", InitializeOrder.as_view(), name="initialize-order"),
+    path(
+        "order/<int:pk>/cart", OrderWithCartListView.as_view(), name="initialize-order"
+        ),
+    path(
+        "update-order/<int:pk>", PartialUpdateOrderView.as_view(), name="update-order"
+        ),
+    path("user/<int:pk>/orders", UserOrders.as_view(), name="user_orders"),
+    path(
+        "user/<int:pk>/store-summary",
+        StorySummaryDetailView.as_view(),
+        name="user-store-summary",
+        ),
+    path("sales-report", SalesReportListView.as_view(), name="sales-report"),
+    path(
+        "done-from-customer/<int:pk>",
+        DoneFromCustomerView.as_view(),
+        name="done-from-customer",
+        ),
+    path("kot", KotListView.as_view(), name="kot-filter")
+    ]

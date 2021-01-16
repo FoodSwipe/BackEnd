@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from cart.models import CartItem, Order
+from cart.models import CartItem, Order, OrderKOT
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -89,5 +89,28 @@ class CartAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class OrderKOTAdmin(admin.ModelAdmin):
+    list_display = (
+        "order",
+        "cart_item",
+        "batch",
+        "timestamp",
+    )
+    ordering = (
+        "order",
+        "cart_item",
+        "batch",
+        "timestamp",
+    )
+    list_filter = (
+        "timestamp",
+    )
+    search_fields = ("order__custom_contact", "order__custom_location")
+    list_per_page = 10
+    autocomplete_fields = ("order", "cart_item")
+    date_hierarchy = "timestamp"
+
+
 admin.site.register(Order, OrderAdmin)
 admin.site.register(CartItem, CartAdmin)
+admin.site.register(OrderKOT, OrderKOTAdmin)

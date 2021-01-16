@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
-from cart.models import Order
+from cart.models import Order, OrderKOT, CartItem
 from cart.serializers.order import (OrderCreateSerializer, OrderPOSTSerializer,
                                     OrderSerializer,
                                     OrderWithCartListSerializer)
@@ -171,6 +171,15 @@ class DoneFromCustomerView(APIView):
 
                 order.done_from_customer = True
                 order.save()
+
+                # create batch one for kot
+                cart_items = CartItem.objects.filter(order=order)
+                for cart_item in cart_items:
+                    OrderKOT.objects.create(
+                        order=order,
+                        cart_item=cart_item,
+                        batch=1
+                    )
                 Log.objects.create(
                     mode="done",
                     actor=order.created_by,

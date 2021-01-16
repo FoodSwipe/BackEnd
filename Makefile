@@ -47,3 +47,9 @@ get-token:
 
 isort:
 	isort .
+
+pylint:
+	DJANGO_SETTINGS_MODULE=backend.settings pylint --load-plugins pylint_django accounts
+
+black:
+	black accounts

@@ -89,8 +89,7 @@ class MonthlySalesReport(models.Model):
 
 class OrderKOT(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_kot")
-    cart_item = models.ForeignKey(MenuItem, on_delete=models.DO_NOTHING, related_name="kot_menu_item")
-    quantity = models.PositiveBigIntegerField()
+    cart_item = models.ForeignKey(CartItem, on_delete=models.DO_NOTHING, related_name="kot_cart_item")
     batch = models.PositiveBigIntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -101,3 +100,5 @@ class OrderKOT(models.Model):
         unique_together = [
             ["order", "cart_item", "batch"]
         ]
+        verbose_name = "Order KOT"
+        verbose_name_plural = "Order KOTs"

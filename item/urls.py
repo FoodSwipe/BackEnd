@@ -6,9 +6,9 @@ from item.views import (ItemTypeViewSet, MenuItemViewSet,
                         TopItemsListView, TopRecommendedMenuItemViewSet)
 
 router = DefaultRouter()
-router.register("item-type", ItemTypeViewSet, basename="menu-item")
+router.register("item-type", ItemTypeViewSet, basename="menu-item-type")
 router.register("menu-item", MenuItemViewSet, basename="menu-item")
-router.register("top-recommended-items", TopRecommendedMenuItemViewSet, basename="menu-item")
+router.register("top-recommended-items", TopRecommendedMenuItemViewSet, basename="top-menu-item")
 
 urlpatterns = router.urls
 

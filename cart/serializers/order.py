@@ -1,7 +1,7 @@
 import decimal
 
 from django.contrib.auth.models import AnonymousUser
-from phonenumbers import timezone
+from django.utils import timezone
 from rest_framework import serializers
 
 from cart.models import CartItem, Order
