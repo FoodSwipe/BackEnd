@@ -45,11 +45,16 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
 
         item_base_order.delivery_charge = get_delivery_charge()
 
-        item_base_order.loyalty_discount = get_loyalty_discount(item_base_order.total_price)
+        item_base_order.loyalty_discount = get_loyalty_discount(
+            item_base_order.total_price
+        )
 
-        item_base_order.grand_total = \
-            item_base_order.total_price + item_base_order.delivery_charge - \
-            decimal.Decimal(item_base_order.loyalty_discount / 100) * item_base_order.total_price
+        item_base_order.grand_total = (
+            item_base_order.total_price
+            + item_base_order.delivery_charge
+            - decimal.Decimal(item_base_order.loyalty_discount / 100)
+            * item_base_order.total_price
+        )
 
         item_base_order.save()
 
@@ -61,15 +66,22 @@ class CartItemPOSTSerializer(serializers.ModelSerializer):
             instance.order.total_items += validated_data["quantity"]
 
             instance.order.total_price -= instance.quantity * instance.item.price
-            instance.order.total_price += instance.item.price * int(validated_data["quantity"])
+            instance.order.total_price += instance.item.price * int(
+                validated_data["quantity"]
+            )
 
             instance.order.delivery_charge = get_delivery_charge()
 
-            instance.order.loyalty_discount = get_loyalty_discount(instance.order.total_price)
+            instance.order.loyalty_discount = get_loyalty_discount(
+                instance.order.total_price
+            )
 
-            instance.order.grand_total = \
-                instance.order.total_price + instance.order.delivery_charge - \
-                decimal.Decimal(instance.order.loyalty_discount / 100) * instance.order.total_price
+            instance.order.grand_total = (
+                instance.order.total_price
+                + instance.order.delivery_charge
+                - decimal.Decimal(instance.order.loyalty_discount / 100)
+                * instance.order.total_price
+            )
 
             instance.order.save()
         return super().update(instance, validated_data)

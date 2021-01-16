@@ -5,8 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from homepage_content.models import HomePageContent
-from homepage_content.serializer import (HomePageContentPOSTSerializer,
-                                         HomePageContentSerializer)
+from homepage_content.serializer import (
+    HomePageContentPOSTSerializer,
+    HomePageContentSerializer,
+)
 
 
 class HomePageContentListView(APIView):
@@ -19,11 +21,9 @@ class HomePageContentListView(APIView):
             instance=all_content,
             many=True,
             read_only=True,
-            context={"request": request}
+            context={"request": request},
         )
-        return Response({
-            "results": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response({"results": serializer.data}, status=status.HTTP_200_OK)
 
 
 class HomepageContentViewSet(viewsets.ModelViewSet):
@@ -41,6 +41,7 @@ class HomepageContentViewSet(viewsets.ModelViewSet):
         homepage_content = self.get_object()
         homepage_content.image.delete()
         homepage_content.delete()
-        return Response({
-            "message": "Homepage content item deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Homepage content item deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )

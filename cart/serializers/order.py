@@ -20,14 +20,20 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['custom_location', "custom_contact", "custom_email", "payment_type", "done_from_customer"]
+        fields = [
+            "custom_location",
+            "custom_contact",
+            "custom_email",
+            "payment_type",
+            "done_from_customer",
+        ]
 
     def get_fields(self, *args, **kwargs):
         fields = super(OrderCreateSerializer, self).get_fields()
-        request = self.context.get('request', None)
+        request = self.context.get("request", None)
         if request and isinstance(request.user, AnonymousUser):
-            fields['custom_location'].required = True
-            fields['custom_contact'].required = True
+            fields["custom_location"].required = True
+            fields["custom_contact"].required = True
         return fields
 
     def create(self, validated_data):
@@ -39,18 +45,27 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 order = Order.objects.get(
                     custom_contact=custom_contact,
                     created_by=None,
-                    done_from_customer=False
+                    done_from_customer=False,
                 )
                 raise serializers.ValidationError(
-                    "Ongoing order exists at #{}. Please check your cart.".format(order.id)
+                    "Ongoing order exists at #{}. Please check your cart.".format(
+                        order.id
+                    )
                 )
             except Order.DoesNotExist:
                 validated_data["created_by"] = None
         else:
             try:
-                order = Order.objects.get(custom_contact=custom_contact, created_by=creator, done_from_customer=False)
+                order = Order.objects.get(
+                    custom_contact=custom_contact,
+                    created_by=creator,
+                    done_from_customer=False,
+                )
                 raise serializers.ValidationError(
-                    "Ongoing order exists at #{}. Please check your cart.".format(order.id))
+                    "Ongoing order exists at #{}. Please check your cart.".format(
+                        order.id
+                    )
+                )
             except Order.DoesNotExist:
                 validated_data["created_by"] = creator
                 email = validated_data.get("custom_email", None)
@@ -70,11 +85,19 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         return Order.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        is_delivery_started = validated_data.get("delivery_started", instance.delivery_started)
+        is_delivery_started = validated_data.get(
+            "delivery_started", instance.delivery_started
+        )
         is_delivered = validated_data.get("is_delivered", instance.is_delivered)
-        done_from_customer = validated_data.get("done_from_customer", instance.done_from_customer)
-        delivery_charge = validated_data.get("delivery_charge", instance.delivery_charge)
-        loyalty_discount = validated_data.get("loyalty_discount", instance.loyalty_discount)
+        done_from_customer = validated_data.get(
+            "done_from_customer", instance.done_from_customer
+        )
+        delivery_charge = validated_data.get(
+            "delivery_charge", instance.delivery_charge
+        )
+        loyalty_discount = validated_data.get(
+            "loyalty_discount", instance.loyalty_discount
+        )
 
         cart_items = CartItem.objects.filter(order=instance)
         calc_total_quantity = 0
@@ -86,39 +109,45 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         instance.total_price = calc_total_price
 
         # use delivery charge and loyalty discount from request data
-        instance.grand_total = \
-            calc_total_price + int(delivery_charge) - decimal.Decimal(loyalty_discount / 100) * calc_total_price
+        instance.grand_total = (
+            calc_total_price
+            + int(delivery_charge)
+            - decimal.Decimal(loyalty_discount / 100) * calc_total_price
+        )
 
         instance.save()
 
         if done_from_customer:
             Log.objects.get_or_create(
                 mode="complete",
-                actor=self.context['request'].user,
+                actor=self.context["request"].user,
                 detail="Order #{} from {} marked done by customer {}".format(
                     instance.id, instance.custom_location, instance.custom_contact
-                )
+                ),
             )
 
         if is_delivery_started:
             validated_data["delivery_started_at"] = timezone.datetime.now()
             Log.objects.get_or_create(
                 mode="start",
-                actor=self.context['request'].user,
-                detail="Delivery started for order #{} by {}".format(instance.id, self.context['request'].user.username)
+                actor=self.context["request"].user,
+                detail="Delivery started for order #{} by {}".format(
+                    instance.id, self.context["request"].user.username
+                ),
             )
         if is_delivered:
             validated_data["delivered_at"] = timezone.datetime.now()
             Log.objects.get_or_create(
                 mode="complete",
-                actor=self.context['request'].user,
-                detail="Delivery completed for order #{} by {}".format(instance.id,
-                                                                       self.context['request'].user.username)
+                actor=self.context["request"].user,
+                detail="Delivery completed for order #{} by {}".format(
+                    instance.id, self.context["request"].user.username
+                ),
             )
             Transaction.objects.create(
                 order=instance,
                 grand_total=instance.grand_total,
-                created_by=self.context['request'].user,
+                created_by=self.context["request"].user,
             )
         return super().update(instance, validated_data)
 

@@ -14,22 +14,73 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('item', '0001_initial'),
+        ("item", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Review',
+            name="Review",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('review', models.TextField(max_length=1024)),
-                ('reviewer_contact', phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None)),
-                ('image', models.ImageField(blank=True, null=True, upload_to=reviews.models.upload_review_image_to, validators=[django.core.validators.FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'JPG', 'webp'])])),
-                ('reviewed_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('menu_item', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reviews', to='item.menuitem')),
-                ('reviewer', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reviews', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("review", models.TextField(max_length=1024)),
+                (
+                    "reviewer_contact",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, region=None
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=reviews.models.upload_review_image_to,
+                        validators=[
+                            django.core.validators.FileExtensionValidator(
+                                [
+                                    "png",
+                                    "jpg",
+                                    "jpeg",
+                                    "gif",
+                                    "bmp",
+                                    "tiff",
+                                    "JPG",
+                                    "webp",
+                                ]
+                            )
+                        ],
+                    ),
+                ),
+                ("reviewed_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "menu_item",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="reviews",
+                        to="item.menuitem",
+                    ),
+                ),
+                (
+                    "reviewer",
+                    models.ForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="reviews",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

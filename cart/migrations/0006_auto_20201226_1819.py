@@ -7,23 +7,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('item', '0001_initial'),
-        ('cart', '0005_remove_order_order_completed'),
+        ("item", "0001_initial"),
+        ("cart", "0005_remove_order_order_completed"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='is_delivered',
+            model_name="order",
+            name="is_delivered",
             field=models.BooleanField(default=False),
         ),
         migrations.CreateModel(
-            name='MonthlySalesReport',
+            name="MonthlySalesReport",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('count', models.PositiveBigIntegerField()),
-                ('date', models.DateField(auto_now_add=True)),
-                ('menu_item', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='menu_item_sales', to='item.menuitem')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("count", models.PositiveBigIntegerField()),
+                ("date", models.DateField(auto_now_add=True)),
+                (
+                    "menu_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="menu_item_sales",
+                        to="item.menuitem",
+                    ),
+                ),
             ],
         ),
     ]

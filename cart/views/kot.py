@@ -26,4 +26,4 @@ class KotListView(ListAPIView):
     serializer_class = KOTSerializer
     queryset = OrderKOT.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ('batch', 'order', "timestamp")
+    filter_fields = ("batch", "order", "timestamp")

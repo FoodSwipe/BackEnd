@@ -5,15 +5,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from item.models import ItemType, MenuItem, TopAndRecommendedItem
-from item.serializers import (ItemTypeSerializer, MenuItemPOSTSerializer,
-                              MenuItemSerializer, OrderNowListSerializer,
-                              TopAndRecommendedMenuItemPostSerializer,
-                              TopAndRecommendedMenuItemSerializer)
+from item.serializers import (
+    ItemTypeSerializer,
+    MenuItemPOSTSerializer,
+    MenuItemSerializer,
+    OrderNowListSerializer,
+    TopAndRecommendedMenuItemPostSerializer,
+    TopAndRecommendedMenuItemSerializer,
+)
 from log.models import Log
 
 
 class MenuItemViewSet(viewsets.ModelViewSet):
-    queryset = MenuItem.objects.all().order_by('created_at')
+    queryset = MenuItem.objects.all().order_by("created_at")
     serializer_class = MenuItemSerializer
 
     def get_serializer_class(self):
@@ -28,15 +32,16 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         Log.objects.create(
             mode="delete",
             actor=request.user,
-            detail="Menu item deleted. ({})".format(menu_item.name)
+            detail="Menu item deleted. ({})".format(menu_item.name),
         )
-        return Response({
-            "message": "Menu item deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Menu item deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class ItemTypeViewSet(viewsets.ModelViewSet):
-    queryset = ItemType.objects.all().order_by('id')
+    queryset = ItemType.objects.all().order_by("id")
     serializer_class = ItemTypeSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAdminUser]
@@ -45,9 +50,10 @@ class ItemTypeViewSet(viewsets.ModelViewSet):
         item_type = self.get_object()
         item_type.badge.delete()
         item_type.delete()
-        return Response({
-            "message": "Menu item type deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Menu item type deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class OrderNowItemsListView(APIView):
@@ -58,15 +64,11 @@ class OrderNowItemsListView(APIView):
     def get(self, request):
         menu_items = MenuItem.objects.all().order_by("name")
         serializer = OrderNowListSerializer(
-            instance=menu_items,
-            many=True,
-            context={"request": request}
+            instance=menu_items, many=True, context={"request": request}
         )
         for item in serializer.data:
             item["avatar"] = item.pop("image")
-        return Response({
-            "results": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response({"results": serializer.data}, status=status.HTTP_200_OK)
 
 
 class TopRecommendedMenuItemViewSet(viewsets.ModelViewSet):
@@ -86,16 +88,13 @@ class TopItemsListView(APIView):
     permission_classes = ()
 
     def get(self, request):
-        all_items = TopAndRecommendedItem.objects.filter(top=True).order_by("-menu_item__created_at")
-        serializer = TopAndRecommendedMenuItemSerializer(
-            instance=all_items,
-            many=True,
-            read_only=True,
-            context={"request": request}
+        all_items = TopAndRecommendedItem.objects.filter(top=True).order_by(
+            "-menu_item__created_at"
         )
-        return Response({
-            "results": serializer.data
-        }, status=status.HTTP_200_OK)
+        serializer = TopAndRecommendedMenuItemSerializer(
+            instance=all_items, many=True, read_only=True, context={"request": request}
+        )
+        return Response({"results": serializer.data}, status=status.HTTP_200_OK)
 
 
 class RecommendedItemsListView(APIView):
@@ -103,13 +102,10 @@ class RecommendedItemsListView(APIView):
     permission_classes = ()
 
     def get(self, request):
-        all_items = TopAndRecommendedItem.objects.filter(recommended=True).order_by("-menu_item__created_at")
-        serializer = TopAndRecommendedMenuItemSerializer(
-            instance=all_items,
-            many=True,
-            read_only=True,
-            context={"request": request}
+        all_items = TopAndRecommendedItem.objects.filter(recommended=True).order_by(
+            "-menu_item__created_at"
         )
-        return Response({
-            "results": serializer.data
-        }, status=status.HTTP_200_OK)
+        serializer = TopAndRecommendedMenuItemSerializer(
+            instance=all_items, many=True, read_only=True, context={"request": request}
+        )
+        return Response({"results": serializer.data}, status=status.HTTP_200_OK)

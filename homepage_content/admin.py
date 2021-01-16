@@ -12,7 +12,7 @@ class HomePageContentAdmin(admin.ModelAdmin):
         "button_text",
         "button_icon",
         "button_to",
-        "created_at"
+        "created_at",
     )
     ordering = (
         "heading",
@@ -20,7 +20,7 @@ class HomePageContentAdmin(admin.ModelAdmin):
         "button_text",
         "button_icon",
         "button_to",
-        "created_at"
+        "created_at",
     )
     sortable_by = (
         "heading",
@@ -28,24 +28,25 @@ class HomePageContentAdmin(admin.ModelAdmin):
         "button_text",
         "button_icon",
         "button_to",
-        "created_at"
-    )
-    list_filter = (
         "created_at",
     )
+    list_filter = ("created_at",)
     search_fields = ("heading", "button_text")
     date_hierarchy = "created_at"
     fieldsets = (
-        ("Home Page Content Item Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "heading",
-                "subtitle",
-                "button_text",
-                "button_icon",
-                "button_to",
-            )
-        }),
+        (
+            "Home Page Content Item Information",
+            {
+                "classes": ("wide", "extrapretty"),
+                "fields": (
+                    "heading",
+                    "subtitle",
+                    "button_text",
+                    "button_icon",
+                    "button_to",
+                ),
+            },
+        ),
     )
 
     list_per_page = 10

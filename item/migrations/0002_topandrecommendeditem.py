@@ -7,17 +7,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('item', '0001_initial'),
+        ("item", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TopAndRecommendedItem',
+            name="TopAndRecommendedItem",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('top', models.BooleanField(default=False)),
-                ('recommended', models.BooleanField(default=False)),
-                ('menu_item', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='item.menuitem')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("top", models.BooleanField(default=False)),
+                ("recommended", models.BooleanField(default=False)),
+                (
+                    "menu_item",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE, to="item.menuitem"
+                    ),
+                ),
             ],
         ),
     ]

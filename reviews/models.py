@@ -21,20 +21,22 @@ def upload_review_image_to(instance, filename):
 
 class Review(models.Model):
     review = models.TextField(max_length=1024)
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.SET_NULL, related_name="reviews", null=True)
+    menu_item = models.ForeignKey(
+        MenuItem, on_delete=models.SET_NULL, related_name="reviews", null=True
+    )
     reviewer = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,
         related_name="reviews",
         null=True,
-        editable=False
+        editable=False,
     )
     reviewer_contact = PhoneNumberField()
     image = models.ImageField(
         upload_to=upload_review_image_to,
         validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)],
         null=True,
-        blank=True
+        blank=True,
     )
     reviewed_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)

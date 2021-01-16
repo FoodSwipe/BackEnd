@@ -26,7 +26,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class ReviewPostSerializer(serializers.ModelSerializer):
-    image = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)], required=False)
+    image = serializers.FileField(
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)], required=False
+    )
 
     class Meta:
         model = Review

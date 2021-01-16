@@ -7,23 +7,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('item', '0003_auto_20201227_1939'),
-        ('cart', '0009_auto_20201226_1924'),
+        ("item", "0003_auto_20201227_1939"),
+        ("cart", "0009_auto_20201226_1924"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='OrderKOT',
+            name="OrderKOT",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveBigIntegerField()),
-                ('batch', models.PositiveBigIntegerField()),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('cart_item', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='kot_menu_item', to='item.menuitem')),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='order_kot', to='cart.order')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveBigIntegerField()),
+                ("batch", models.PositiveBigIntegerField()),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                (
+                    "cart_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="kot_menu_item",
+                        to="item.menuitem",
+                    ),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="order_kot",
+                        to="cart.order",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('order', 'cart_item', 'batch')},
+                "unique_together": {("order", "cart_item", "batch")},
             },
         ),
     ]

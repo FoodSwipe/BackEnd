@@ -25,14 +25,13 @@ class MenuItemGroupAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     date_hierarchy = "created_at"
     fieldsets = (
-        ("Item Group Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "name",
-                "description",
-                "image"
-            )
-        }),
+        (
+            "Item Group Information",
+            {
+                "classes": ("wide", "extrapretty"),
+                "fields": ("name", "description", "image"),
+            },
+        ),
     )
     list_per_page = 10
 

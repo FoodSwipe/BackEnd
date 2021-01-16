@@ -15,13 +15,44 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Log',
+            name="Log",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('log_mode', models.CharField(choices=[('create', 'Create'), ('update', 'Update'), ('delete', 'Delete'), ('start', 'Delivery Started'), ('complete', 'Delivery Completed')], default='Cash', editable=False, max_length=8)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('detail', models.CharField(max_length=512)),
-                ('actor', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "log_mode",
+                    models.CharField(
+                        choices=[
+                            ("create", "Create"),
+                            ("update", "Update"),
+                            ("delete", "Delete"),
+                            ("start", "Delivery Started"),
+                            ("complete", "Delivery Completed"),
+                        ],
+                        default="Cash",
+                        editable=False,
+                        max_length=8,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                ("detail", models.CharField(max_length=512)),
+                (
+                    "actor",
+                    models.ForeignKey(
+                        blank=True,
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

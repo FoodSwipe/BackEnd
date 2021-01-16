@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0011_remove_orderkot_quantity'),
+        ("cart", "0011_remove_orderkot_quantity"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='orderkot',
-            name='cart_item',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='kot_cart_item', to='cart.cartitem'),
+            model_name="orderkot",
+            name="cart_item",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                related_name="kot_cart_item",
+                to="cart.cartitem",
+            ),
         ),
     ]

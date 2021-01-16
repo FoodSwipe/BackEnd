@@ -14,7 +14,8 @@ class LogsListView(APIView):
 
     @staticmethod
     def get(request):
-        logs = Log.objects.all().order_by('-timestamp')
-        return Response({
-            "results": LogSerializer(instance=logs, many=True, read_only=True).data
-        }, status=status.HTTP_200_OK)
+        logs = Log.objects.all().order_by("-timestamp")
+        return Response(
+            {"results": LogSerializer(instance=logs, many=True, read_only=True).data},
+            status=status.HTTP_200_OK,
+        )

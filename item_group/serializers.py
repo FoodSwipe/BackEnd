@@ -46,7 +46,9 @@ class MenuItemGroupSerializer(serializers.ModelSerializer):
 
 
 class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
-    image = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+    image = serializers.FileField(
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
+    )
 
     @staticmethod
     def validate_image(image):
@@ -60,9 +62,9 @@ class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
 
     def get_fields(self, *args, **kwargs):
         fields = super(MenuItemGroupPOSTSerializer, self).get_fields()
-        request = self.context.get('request', None)
-        if request and getattr(request, 'method', None) == "PUT":
-            fields['image'].required = False
+        request = self.context.get("request", None)
+        if request and getattr(request, "method", None) == "PUT":
+            fields["image"].required = False
         return fields
 
     def create(self, validated_data):
@@ -70,7 +72,7 @@ class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
         Log.objects.create(
             mode="delete",
             actor=validated_data["created_by"],
-            detail="New menu item group added. ({})".format(validated_data["name"])
+            detail="New menu item group added. ({})".format(validated_data["name"]),
         )
         return super().create(validated_data)
 

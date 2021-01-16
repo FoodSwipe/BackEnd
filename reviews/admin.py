@@ -28,8 +28,10 @@ class ReviewAdmin(admin.ModelAdmin):
     )
     date_hierarchy = "reviewed_at"
     search_fields = (
-        "reviewer__username", "reviewer_contact",
-        "review", "menu_item__name"
+        "reviewer__username",
+        "reviewer_contact",
+        "review",
+        "menu_item__name",
     )
     autocomplete_fields = ["menu_item", "reviewer"]
 

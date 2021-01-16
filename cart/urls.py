@@ -11,7 +11,7 @@ from cart.views.order import (
     OrderWithCartListView,
     PartialUpdateOrderView,
     UserOrders,
-    )
+)
 from cart.views.report import SalesReportListView, StorySummaryDetailView
 
 router = DefaultRouter()
@@ -27,21 +27,21 @@ urlpatterns += [
     path("init-order", InitializeOrder.as_view(), name="initialize-order"),
     path(
         "order/<int:pk>/cart", OrderWithCartListView.as_view(), name="initialize-order"
-        ),
+    ),
     path(
         "update-order/<int:pk>", PartialUpdateOrderView.as_view(), name="update-order"
-        ),
+    ),
     path("user/<int:pk>/orders", UserOrders.as_view(), name="user_orders"),
     path(
         "user/<int:pk>/store-summary",
         StorySummaryDetailView.as_view(),
         name="user-store-summary",
-        ),
+    ),
     path("sales-report", SalesReportListView.as_view(), name="sales-report"),
     path(
         "done-from-customer/<int:pk>",
         DoneFromCustomerView.as_view(),
         name="done-from-customer",
-        ),
-    path("kot", KotListView.as_view(), name="kot-filter")
-    ]
+    ),
+    path("kot", KotListView.as_view(), name="kot-filter"),
+]

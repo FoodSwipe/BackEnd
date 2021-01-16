@@ -31,7 +31,9 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 
 class MenuItemPOSTSerializer(serializers.ModelSerializer):
-    image = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+    image = serializers.FileField(
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
+    )
 
     class Meta:
         model = MenuItem
@@ -39,9 +41,9 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
 
     def get_fields(self, *args, **kwargs):
         fields = super(MenuItemPOSTSerializer, self).get_fields()
-        request = self.context.get('request', None)
-        if request and getattr(request, 'method', None) == "PUT":
-            fields['image'].required = False
+        request = self.context.get("request", None)
+        if request and getattr(request, "method", None) == "PUT":
+            fields["image"].required = False
         return fields
 
     @staticmethod
@@ -62,7 +64,7 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
         Log.objects.create(
             mode="create",
             actor=validated_data["created_by"],
-            detail="New menu item added. ({})".format(menu_item.name)
+            detail="New menu item added. ({})".format(menu_item.name),
         )
         return menu_item
 
@@ -72,7 +74,9 @@ class MenuItemPOSTSerializer(serializers.ModelSerializer):
 
 
 class ItemTypeSerializer(serializers.ModelSerializer):
-    badge = serializers.FileField(validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)])
+    badge = serializers.FileField(
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
+    )
 
     class Meta:
         model = ItemType

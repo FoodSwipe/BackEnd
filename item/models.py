@@ -31,7 +31,7 @@ class ItemType(models.Model):
     badge = models.ImageField(
         upload_to=upload_menu_type_badge_to,
         validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)],
-        help_text="Add badge image for this type of item."
+        help_text="Add badge image for this type of item.",
     )
 
     class Meta:
@@ -54,18 +54,21 @@ class Item(models.Model):
     name = models.CharField(max_length=128, unique=True)
     description = models.TextField(
         max_length=512,
-        null=True, blank=True,
-        help_text="Add features, specialities or uniqueness about the item."
+        null=True,
+        blank=True,
+        help_text="Add features, specialities or uniqueness about the item.",
     )
     price = models.DecimalField(max_digits=8, decimal_places=2, help_text="in Rupees")
-    is_available = models.BooleanField(default=True, verbose_name="Is available on store?")
+    is_available = models.BooleanField(
+        default=True, verbose_name="Is available on store?"
+    )
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     created_by = models.ForeignKey(
         get_user_model(),
         editable=False,
         related_name="MenuItemCreator",
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
     )
     updated_at = models.DateTimeField(auto_now=True, editable=False)
     updated_by = models.ForeignKey(
@@ -73,7 +76,7 @@ class Item(models.Model):
         editable=False,
         related_name="MenuItemModifier",
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
     )
 
     menu_item_group = models.ForeignKey(
@@ -81,7 +84,7 @@ class Item(models.Model):
         null=True,
         blank=True,
         related_name="menu_items",
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     image = models.ImageField(
         upload_to=upload_menu_item_media_to,
@@ -101,45 +104,37 @@ class Item(models.Model):
 
 
 BAR_SIZE_CHOICES = [
-    ('Quarter', 'Quarter'),
-    ('Half', 'Half'),
-    ('Full', 'Full'),
+    ("Quarter", "Quarter"),
+    ("Half", "Half"),
+    ("Full", "Full"),
 ]
 
 
 class MenuItem(Item):
     ingredients = models.CharField(max_length=512, null=True)
     scale = models.IntegerField(
-        default=1,
-        help_text="Scale for price i.e. how much (pcs/ml) on this price?"
+        default=1, help_text="Scale for price i.e. how much (pcs/ml) on this price?"
     )
     weight = models.DecimalField(
-        max_digits=8, decimal_places=2, null=True, blank=True,
-        help_text="in grams for regular item and ml for bar item"
-    )
-    calorie = models.DecimalField(
         max_digits=8,
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="in kCal"
+        help_text="in grams for regular item and ml for bar item",
     )
-    is_veg = models.BooleanField(
-        verbose_name="Is vegetarian item?",
-        default=False
+    calorie = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True, help_text="in kCal"
     )
+    is_veg = models.BooleanField(verbose_name="Is vegetarian item?", default=False)
     item_type = models.ManyToManyField(
         ItemType,
         help_text="You can select multiple item types.",
         blank=True,
-        related_name="item_types"
+        related_name="item_types",
     )
     is_bar_item = models.BooleanField(default=False)
     bar_size = models.CharField(
-        max_length=8,
-        choices=BAR_SIZE_CHOICES,
-        null=True,
-        blank=True
+        max_length=8, choices=BAR_SIZE_CHOICES, null=True, blank=True
     )
 
     class Meta:
@@ -152,9 +147,7 @@ class MenuItem(Item):
 
 class TopAndRecommendedItem(models.Model):
     menu_item = models.OneToOneField(
-        MenuItem,
-        on_delete=models.CASCADE,
-        related_name="special"
+        MenuItem, on_delete=models.CASCADE, related_name="special"
     )
     top = models.BooleanField(default=False)
     recommended = models.BooleanField(default=False)

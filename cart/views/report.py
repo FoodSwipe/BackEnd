@@ -10,9 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cart.models import CartItem, MonthlySalesReport, Order
-from cart.serializers.report import (RecentLocationsSerializer,
-                                     SalesReportSerializer,
-                                     UserTopItemsSerializer)
+from cart.serializers.report import (
+    RecentLocationsSerializer,
+    SalesReportSerializer,
+    UserTopItemsSerializer,
+)
 from item.models import MenuItem
 from utils.helper import generate_url_for_media_resources
 
@@ -25,7 +27,7 @@ class RecentLocation:
 
 class TopItem:
     def __init__(self, image, count):
-        self.image = image,
+        self.image = (image,)
         self.count = count
 
 
@@ -34,11 +36,7 @@ def get_reverse_sorted_dict(not_sorted_dict):
     :param not_sorted_dict dictionary to sort
     :returns dict sorted dictionary
     """
-    return dict(sorted(
-        not_sorted_dict.items(),
-        key=lambda item: item[1],
-        reverse=True
-    ))
+    return dict(sorted(not_sorted_dict.items(), key=lambda item: item[1], reverse=True))
 
 
 def get_top_items_from_dict(desc_sorted_dict, top_count):
@@ -82,8 +80,12 @@ def get_most_recent_locations_of_user(completed_orders):
         recent_locations.append(order.custom_location)
 
     recent_locations_with_count_dict = dict(Counter(recent_locations))
-    desc_sorted_recent_locations_dict = get_reverse_sorted_dict(recent_locations_with_count_dict)
-    most_recent_locations_dict = get_top_items_from_dict(desc_sorted_recent_locations_dict, 3)
+    desc_sorted_recent_locations_dict = get_reverse_sorted_dict(
+        recent_locations_with_count_dict
+    )
+    most_recent_locations_dict = get_top_items_from_dict(
+        desc_sorted_recent_locations_dict, 3
+    )
 
     for location, count in most_recent_locations_dict.items():
         location_obj = RecentLocation(location=location, count=count)
@@ -116,31 +118,32 @@ class StorySummaryDetailView(APIView):
                 instance=top_items,
                 many=True,
                 read_only=True,
-                context={"request": request}
+                context={"request": request},
             )
             top_items = generate_url_for_media_resources(top_items)
 
             completed_orders = Order.objects.filter(created_by=user, is_delivered=True)
             most_recent_locations = get_most_recent_locations_of_user(completed_orders)
             most_recent_locations = RecentLocationsSerializer(
-                instance=most_recent_locations,
-                many=True,
-                read_only=True
+                instance=most_recent_locations, many=True, read_only=True
             ).data
 
             total_transaction = get_total_transaction_amount_of_a_user(completed_orders)
 
-            return Response({
-                "total_transaction": total_transaction,
-                "total_orders": total_orders,
-                "total_cart_items_count": cart_items_count,
-                "top_items": top_items.data,
-                "most_recent_locations": most_recent_locations
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "total_transaction": total_transaction,
+                    "total_orders": total_orders,
+                    "total_cart_items_count": cart_items_count,
+                    "top_items": top_items.data,
+                    "most_recent_locations": most_recent_locations,
+                },
+                status=status.HTTP_200_OK,
+            )
         except get_user_model().DoesNotExist:
-            return Response({
-                "details": "User not found."
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"details": "User not found."}, status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class SalesReportListView(APIView):
@@ -159,15 +162,13 @@ class SalesReportListView(APIView):
         now = timezone.datetime.now()
         for itemId, count in desc_sorted_dict.items():
             item = MenuItem.objects.get(pk=itemId)
-            bought_item, created = MonthlySalesReport.objects.get_or_create(menu_item=item, date=now.strftime("%Y/%m"))
+            bought_item, created = MonthlySalesReport.objects.get_or_create(
+                menu_item=item, date=now.strftime("%Y/%m")
+            )
             bought_item.sale_count = count
             bought_item.save()
             bought_items_list.append(bought_item)
         serializer = SalesReportSerializer(
-            instance=bought_items_list,
-            many=True,
-            context={"request": request}
+            instance=bought_items_list, many=True, context={"request": request}
         )
-        return Response({
-            "results": serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response({"results": serializer.data}, status=status.HTTP_200_OK)

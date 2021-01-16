@@ -6,7 +6,7 @@ from cart.serializers.cart import CartItemPOSTSerializer, CartItemSerializer
 
 
 class CartItemViewSet(viewsets.ModelViewSet):
-    queryset = CartItem.objects.all().order_by('created_at')
+    queryset = CartItem.objects.all().order_by("created_at")
     serializer_class = CartItemSerializer
 
     def get_serializer_class(self):
@@ -20,6 +20,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
         cart_item.order.total_price -= cart_item.quantity * cart_item.item.price
         cart_item.order.save()
         cart_item.delete()
-        return Response({
-            "message": "Cart order_location removed successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Cart order_location removed successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )

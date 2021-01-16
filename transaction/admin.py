@@ -17,16 +17,14 @@ class TransactionAdmin(admin.ModelAdmin):
         "created_by",
     )
     list_filter = ("created_at",)
-    search_fields = ("created_by__username", )
+    search_fields = ("created_by__username",)
     date_hierarchy = "created_at"
     autocomplete_fields = ("order",)
     fieldsets = (
-        ("Transaction Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "order",
-            )
-        }),
+        (
+            "Transaction Information",
+            {"classes": ("wide", "extrapretty"), "fields": ("order",)},
+        ),
     )
     list_per_page = 10
 

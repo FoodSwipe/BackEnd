@@ -18,6 +18,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         review = self.get_object()
         review.image.delete()
         review.delete()
-        return Response({
-            "message": "Menu item type deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Menu item type deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )

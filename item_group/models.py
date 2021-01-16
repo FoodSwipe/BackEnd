@@ -26,7 +26,7 @@ class MenuItemGroup(models.Model):
         editable=False,
         null=True,
         on_delete=models.SET_NULL,
-        related_name="MenuItemGroupCreator"
+        related_name="MenuItemGroupCreator",
     )
     updated_at = models.DateTimeField(auto_now=True, editable=False)
     updated_by = models.ForeignKey(
@@ -34,11 +34,11 @@ class MenuItemGroup(models.Model):
         editable=False,
         null=True,
         on_delete=models.SET_NULL,
-        related_name="MenuItemGroupModifier"
+        related_name="MenuItemGroupModifier",
     )
     image = models.ImageField(
         upload_to=upload_menu_item_group_media_to,
-        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)]
+        validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)],
     )
 
     class Meta:

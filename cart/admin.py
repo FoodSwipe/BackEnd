@@ -27,7 +27,12 @@ class OrderAdmin(admin.ModelAdmin):
     )
     list_filter = ("created_at", "updated_at")
     date_hierarchy = "created_at"
-    search_fields = ("created_by__username", "custom_location", "custom_contact", "custom_email",)
+    search_fields = (
+        "created_by__username",
+        "custom_location",
+        "custom_contact",
+        "custom_email",
+    )
     list_per_page = 10
 
     def save_model(self, request, obj, form, change):
@@ -46,16 +51,9 @@ class CartAdmin(admin.ModelAdmin):
         "quantity",
         "created_at",
         "created_by",
-        "updated_at"
+        "updated_at",
     )
-    ordering = (
-        "order",
-        "item",
-        "quantity",
-        "created_at",
-        "created_by",
-        "updated_at"
-    )
+    ordering = ("order", "item", "quantity", "created_at", "created_by", "updated_at")
     list_filter = ("created_at", "updated_at")
     date_hierarchy = "created_at"
     search_fields = ("item__name", "created_by__username")
@@ -63,14 +61,17 @@ class CartAdmin(admin.ModelAdmin):
     list_per_page = 10
     save_as_continue = True
     fieldsets = (
-        ("Cart Information", {
-            "classes": ("wide", "extrapretty"),
-            "fields": (
-                "order",
-                "item",
-                "quantity",
-            )
-        }),
+        (
+            "Cart Information",
+            {
+                "classes": ("wide", "extrapretty"),
+                "fields": (
+                    "order",
+                    "item",
+                    "quantity",
+                ),
+            },
+        ),
     )
 
     def save_model(self, request, obj, form, change):
@@ -102,9 +103,7 @@ class OrderKOTAdmin(admin.ModelAdmin):
         "batch",
         "timestamp",
     )
-    list_filter = (
-        "timestamp",
-    )
+    list_filter = ("timestamp",)
     search_fields = ("order__custom_contact", "order__custom_location")
     list_per_page = 10
     autocomplete_fields = ("order", "cart_item")

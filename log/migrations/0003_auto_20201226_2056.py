@@ -6,18 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('log', '0002_auto_20201226_0057'),
+        ("log", "0002_auto_20201226_0057"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='log',
-            name='detail',
+            model_name="log",
+            name="detail",
             field=models.CharField(editable=False, max_length=512),
         ),
         migrations.AlterField(
-            model_name='log',
-            name='mode',
-            field=models.CharField(choices=[('create', 'Create'), ('update', 'Update'), ('delete', 'Delete'), ('start', 'Delivery Started'), ('complete', 'Delivery Completed')], editable=False, max_length=8),
+            model_name="log",
+            name="mode",
+            field=models.CharField(
+                choices=[
+                    ("create", "Create"),
+                    ("update", "Update"),
+                    ("delete", "Delete"),
+                    ("start", "Delivery Started"),
+                    ("complete", "Delivery Completed"),
+                ],
+                editable=False,
+                max_length=8,
+            ),
         ),
     ]

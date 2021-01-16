@@ -11,7 +11,7 @@ class LogAdmin(admin.ModelAdmin):
         "detail",
     )
     list_filter = ("timestamp", "mode")
-    date_hierarchy = 'timestamp'
+    date_hierarchy = "timestamp"
     search_fields = ("mode", "actor__username", "detail")
     list_per_page = 10
 

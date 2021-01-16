@@ -10,4 +10,5 @@ def check_size(resource, max_size):
     if resource.size / 1000 > max_size:
         raise serializers.ValidationError(
             f"Resource exceeds maximum upload size."
-            f" Allowed maximum size: {max_size / 1000} MB")
+            f" Allowed maximum size: {max_size / 1000} MB"
+        )

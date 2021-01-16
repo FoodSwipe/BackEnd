@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0002_order_delivered_at'),
+        ("cart", "0002_order_delivered_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='order_completed',
+            model_name="order",
+            name="order_completed",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='order',
-            name='order_completed_at',
+            model_name="order",
+            name="order_completed_at",
             field=models.DateTimeField(blank=True, editable=False, null=True),
         ),
     ]

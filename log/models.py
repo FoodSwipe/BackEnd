@@ -2,12 +2,12 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 LOG_MODES_CHOICES = [
-    ('create', 'Create'),
-    ('update', 'Update'),
-    ('delete', 'Delete'),
-    ('done', 'Done From Customer'),
-    ('start', 'Delivery Started'),
-    ('complete', 'Delivery Completed')
+    ("create", "Create"),
+    ("update", "Update"),
+    ("delete", "Delete"),
+    ("done", "Done From Customer"),
+    ("start", "Delivery Started"),
+    ("complete", "Delivery Completed"),
 ]
 
 
@@ -16,9 +16,10 @@ class Log(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
     actor = models.ForeignKey(
         get_user_model(),
-        null=True, blank=True,
+        null=True,
+        blank=True,
         editable=False,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     detail = models.CharField(max_length=512, editable=False)
 

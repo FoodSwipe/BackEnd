@@ -5,9 +5,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from item_group.models import MenuItemGroup
-from item_group.serializers import (ItemGroupSerializer,
-                                    MenuItemGroupPOSTSerializer,
-                                    MenuItemGroupSerializer)
+from item_group.serializers import (
+    ItemGroupSerializer,
+    MenuItemGroupPOSTSerializer,
+    MenuItemGroupSerializer,
+)
 from log.models import Log
 
 
@@ -29,11 +31,12 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         Log.objects.create(
             mode="delete",
             actor=request.user,
-            detail="Menu item group deleted. ({})".format(menu_item_group.name)
+            detail="Menu item group deleted. ({})".format(menu_item_group.name),
         )
-        return Response({
-            "message": "Menu item group deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Menu item group deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class MenuItemGroupsWithItemListView(APIView):
@@ -44,14 +47,11 @@ class MenuItemGroupsWithItemListView(APIView):
         try:
             menu_item_group = MenuItemGroup.objects.all()
             serializer = ItemGroupSerializer(
-                instance=menu_item_group,
-                many=True,
-                context={"request": request}
+                instance=menu_item_group, many=True, context={"request": request}
             )
-            return Response({
-                "results": serializer.data
-            }, status=status.HTTP_200_OK)
+            return Response({"results": serializer.data}, status=status.HTTP_200_OK)
         except MenuItemGroup.DoesNotExist:
-            return Response({
-                "message": "Menu item group not found."
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": "Menu item group not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )

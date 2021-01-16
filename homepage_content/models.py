@@ -5,14 +5,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
-from backend.settings import (ALLOWED_IMAGES_EXTENSIONS,
-                              HOMEPAGE_CONTENT_IMAGE_MAX_SIZE)
+from backend.settings import ALLOWED_IMAGES_EXTENSIONS, HOMEPAGE_CONTENT_IMAGE_MAX_SIZE
 
 
 def upload_image_to(instance, filename):
     _, file_extension = os.path.splitext(filename)
     filename = str(random.getrandbits(64)) + file_extension
-    return f'homepage_content/{filename}'
+    return f"homepage_content/{filename}"
 
 
 class HomePageContent(models.Model):

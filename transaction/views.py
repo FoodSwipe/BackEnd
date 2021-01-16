@@ -4,8 +4,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from transaction.models import Transaction
-from transaction.serializers import (TransactionPOSTSerializer,
-                                     TransactionSerializer)
+from transaction.serializers import TransactionPOSTSerializer, TransactionSerializer
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -22,6 +21,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         transaction = self.get_object()
         transaction.delete()
-        return Response({
-            "message": "Transaction deleted successfully."
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Transaction deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
