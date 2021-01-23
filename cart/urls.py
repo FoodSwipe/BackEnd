@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from cart.views.cart import CartItemViewSet
-from cart.views.kot import OrderKotViewSet, KotListView
+from cart.views.kot import OrderKotViewSet, KotListView, GeneratePostKotView
 from cart.views.order import (
     DoneFromCustomerView,
     InitializeOrder,
@@ -44,4 +44,9 @@ urlpatterns += [
         name="done-from-customer",
     ),
     path("kot", KotListView.as_view(), name="kot-filter"),
+    path(
+        "generate-post-kot/<int:pk>",
+        GeneratePostKotView.as_view(),
+        name="generate-post-kot",
+    ),
 ]
