@@ -1,9 +1,10 @@
 SHELL=/bin/bash
-PYTHON=python
+PYTHON=python3.8
 PIP=pip
 
 create-env:
-	python3.8 -m venv venv
+	$(PYTHON) -m venv venv
+	echo "RUN: source/venv/activate to activate recently created environment."
 
 install:
 	$(PIP) install -r requirements.txt
@@ -25,6 +26,7 @@ clean-db:
 
 clean-migrations:
 	echo "Cleaning Migrations..."
+	rm -rf **/migrations
 
 clean-db-with-migration: clean-db clean-migrations
 
@@ -52,4 +54,4 @@ pylint:
 	DJANGO_SETTINGS_MODULE=backend.settings pylint --load-plugins pylint_django accounts
 
 black:
-	black accounts
+	black accounts backend cart homepage_content item item_group log reviews transaction utils manage.py passenger_wsgi.py
