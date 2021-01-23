@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from cart.views.cart import CartItemViewSet
+from cart.views.cart import CartItemViewSet, CartItemQuantityUpdateView
 from cart.views.kot import OrderKotViewSet, KotListView, GeneratePostKotView
 from cart.views.order import (
     DoneFromCustomerView,
@@ -49,4 +49,5 @@ urlpatterns += [
         GeneratePostKotView.as_view(),
         name="generate-post-kot",
     ),
+    path("cart-item/<int:pk>/quantity-update", CartItemQuantityUpdateView.as_view(), name="kot-quantity-update")
 ]

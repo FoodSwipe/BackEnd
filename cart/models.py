@@ -90,6 +90,10 @@ class OrderKOT(models.Model):
     cart_item = models.ForeignKey(
         CartItem, on_delete=models.DO_NOTHING, related_name="kot_cart_item"
     )
+    quantity_diff = models.BigIntegerField(
+        default=0,
+        help_text="Quantity difference from previous batch of this KOT item"
+    )
     batch = models.PositiveBigIntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

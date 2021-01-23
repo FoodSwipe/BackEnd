@@ -181,7 +181,7 @@ class DoneFromCustomerView(APIView):
                 # create batch one for kot
                 cart_items = CartItem.objects.filter(order=order)
                 for cart_item in cart_items:
-                    OrderKOT.objects.create(order=order, cart_item=cart_item, batch=1)
+                    OrderKOT.objects.create(order=order, cart_item=cart_item, batch=1, quantity_diff=cart_item.quantity)
                 Log.objects.create(
                     mode="done",
                     actor=order.created_by,

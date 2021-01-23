@@ -95,16 +95,18 @@ class OrderKOTAdmin(admin.ModelAdmin):
         "order",
         "cart_item",
         "batch",
+        "quantity_diff",
         "timestamp",
     )
     ordering = (
         "order",
         "cart_item",
         "batch",
+        "quantity_diff",
         "timestamp",
     )
     list_filter = ("timestamp",)
-    search_fields = ("order__custom_contact", "order__custom_location")
+    search_fields = ("order__custom_contact", "order__custom_location", "cart_item__item__name")
     list_per_page = 10
     autocomplete_fields = ("order", "cart_item")
     date_hierarchy = "timestamp"
