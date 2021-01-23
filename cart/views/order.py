@@ -170,6 +170,7 @@ class DoneFromCustomerView(APIView):
                         user.save()
 
                         user.profile.contact = order.custom_contact
+                        user.profile.address = order.custom_location
                         user.save()
 
                         order.created_by = user
