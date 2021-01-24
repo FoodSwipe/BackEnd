@@ -118,6 +118,7 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
         instance.save()
 
         if done_from_customer:
+            validated_data["done_from_customer_at"] = timezone.datetime.now()
             Log.objects.get_or_create(
                 mode="complete",
                 actor=self.context["request"].user,
@@ -158,6 +159,7 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
     updated_at = serializers.SerializerMethodField()
     delivery_started_at = serializers.SerializerMethodField()
     delivered_at = serializers.SerializerMethodField()
+    done_from_customer_at = serializers.SerializerMethodField()
 
     @staticmethod
     def get_created_at(obj):
@@ -181,6 +183,12 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
             return obj.delivered_at
         return obj.delivered_at.strftime("%Y/%m/%d %H:%M:%S")
 
+    @staticmethod
+    def get_done_from_customer_at(obj):
+        if not obj.done_from_customer_at:
+            return obj.done_from_customer_at
+        return obj.done_from_customer_at.strftime("%Y/%m/%d %H:%M:%S")
+
     class Meta:
         model = Order
         fields = [
@@ -198,6 +206,7 @@ class OrderWithCartListSerializer(serializers.ModelSerializer):
             "total_price",
             "total_items",
             "done_from_customer",
+            "done_from_customer_at",
             "created_at",
             "updated_at",
             "created_by",

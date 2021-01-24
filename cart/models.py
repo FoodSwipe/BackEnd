@@ -22,6 +22,7 @@ class Order(models.Model):
     loyalty_discount = models.PositiveBigIntegerField(default=0, editable=False)
     grand_total = models.PositiveBigIntegerField(default=0, editable=False)
     done_from_customer = models.BooleanField(default=False)
+    done_from_customer_at = models.DateTimeField(null=True)
     total_items = models.PositiveBigIntegerField(default=0, editable=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
