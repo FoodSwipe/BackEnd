@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -6,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
+from cart.filters import OrderFilter
 from cart.models import Order, OrderKOT, CartItem
 from cart.serializers.order import (
     OrderCreateSerializer,
@@ -85,6 +88,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = OrderFilter
 
     def get_serializer_class(self):
         if self.action in ["create", "partial_update", "update"]:
@@ -177,6 +182,7 @@ class DoneFromCustomerView(APIView):
                         order.save()
 
                 order.done_from_customer = True
+                order.done_from_customer_at = timezone.datetime.now()
                 order.save()
 
                 # create batch one for kot
