@@ -8,4 +8,4 @@ class OrderFilter(FilterSet):
 
     class Meta:
         model = Order
-        fields = ['created_at']
+        fields = ["created_at"]

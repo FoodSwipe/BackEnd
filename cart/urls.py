@@ -49,5 +49,9 @@ urlpatterns += [
         GeneratePostKotView.as_view(),
         name="generate-post-kot",
     ),
-    path("cart-item/<int:pk>/quantity-update", CartItemQuantityUpdateView.as_view(), name="kot-quantity-update")
+    path(
+        "cart-item/<int:pk>/quantity-update",
+        CartItemQuantityUpdateView.as_view(),
+        name="kot-quantity-update",
+    ),
 ]

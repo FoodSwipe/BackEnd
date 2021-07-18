@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0001_initial'),
+        ("cart", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='orderkot',
-            name='quantity_diff',
-            field=models.BigIntegerField(default=0, help_text='Quantity difference from previous batch of this KOT item'),
+            model_name="orderkot",
+            name="quantity_diff",
+            field=models.BigIntegerField(
+                default=0,
+                help_text="Quantity difference from previous batch of this KOT item",
+            ),
         ),
     ]

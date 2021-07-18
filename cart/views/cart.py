@@ -47,9 +47,10 @@ class CartItemQuantityUpdateView(APIView):
             cart_item = CartItem.objects.get(pk=pk)
             return cart_item
         except CartItem.DoesNotExist:
-            return Response({
-                "detail": "Cart item does not exists"
-                }, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Cart item does not exists"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def post(self, request, pk):
         cart_item_instance = self.get_object(pk=pk)
@@ -57,30 +58,35 @@ class CartItemQuantityUpdateView(APIView):
         quantity_from_request = int(request.data.get("quantity"))
         previous_quantity = cart_item_instance.quantity
         if previous_quantity is quantity_from_request:
-            return Response({
-                "detail": "Quantity remains unchanged.",
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "detail": "Quantity remains unchanged.",
+                },
+                status=status.HTTP_200_OK,
+            )
         serializer = CartItemPOSTSerializer(
             instance=cart_item_instance,
             data=request.data,
             partial=True,
-            context={"request": request}
+            context={"request": request},
         )
         if serializer.is_valid():
             updated_cart_item = serializer.save()
             item_order_kots = OrderKOT.objects.filter(
-                order=updated_cart_item.order,
-                cart_item__item=updated_cart_item.item
+                order=updated_cart_item.order, cart_item__item=updated_cart_item.item
             )
             last_batch = self.get_last_batch(item_order_kots)
             OrderKOT.objects.create(
                 order=updated_cart_item.order,
                 cart_item=updated_cart_item,
-                batch=last_batch+1,
-                quantity_diff=(updated_cart_item.quantity - previous_quantity)
+                batch=last_batch + 1,
+                quantity_diff=(updated_cart_item.quantity - previous_quantity),
             )
-            return Response({
-                "detail": "Cart item quantity updated successfully.",
-                "cart_item": serializer.data
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "detail": "Cart item quantity updated successfully.",
+                    "cart_item": serializer.data,
+                },
+                status=status.HTTP_200_OK,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

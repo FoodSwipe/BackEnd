@@ -106,7 +106,11 @@ class OrderKOTAdmin(admin.ModelAdmin):
         "timestamp",
     )
     list_filter = ("timestamp",)
-    search_fields = ("order__custom_contact", "order__custom_location", "cart_item__item__name")
+    search_fields = (
+        "order__custom_contact",
+        "order__custom_location",
+        "cart_item__item__name",
+    )
     list_per_page = 10
     autocomplete_fields = ("order", "cart_item")
     date_hierarchy = "timestamp"
