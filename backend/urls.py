@@ -9,7 +9,7 @@ urlpatterns = [
     path("", admin.site.urls),
     path("select2/", include("django_select2.urls")),
     url(r"^api-auth/", include("rest_framework.urls")),
-    path("api/", include("accounts.urls")),
+    url(r"^api/", include("accounts.urls")),
     path("api/", include("item.urls")),
     path("api/", include("item_group.urls")),
     path("api/", include("cart.urls")),
