@@ -20,6 +20,11 @@ from accounts.serializers.user import (
 from log.models import Log
 
 
+class RegisterFollower(APIView):
+    def post(self, request):
+        return Response({"message": "happy"})
+
+
 class RegisterUser(APIView):
     @staticmethod
     def post(request):
