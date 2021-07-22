@@ -5,10 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from homepage_content.models import HomePageContent
-from homepage_content.serializer import (
-    HomePageContentPOSTSerializer,
-    HomePageContentSerializer,
-)
+from homepage_content.serializer import (HomePageContentPOSTSerializer,
+                                         HomePageContentSerializer)
 
 
 class HomePageContentListView(APIView):

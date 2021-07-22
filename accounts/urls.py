@@ -1,28 +1,15 @@
 from django.urls import path
 
-from accounts.views.accounts import (
-    AddUser,
-    ListUser,
-    RegisterUser,
-    RegisterFollower,
-    RegistrationSummaryListView,
-    ToggleStaffUserStatus,
-    ToggleSuperUserStatus,
-    UpdateUserWithProfile,
-    UserDetail,
-)
+from accounts.views.accounts import (AddUser, ListUser, RegisterFollower,
+                                     RegisterUser, RegistrationSummaryListView,
+                                     ToggleStaffUserStatus,
+                                     ToggleSuperUserStatus,
+                                     UpdateUserWithProfile, UserDetail)
 from accounts.views.login import LoginView, LogoutView
-from accounts.views.password import (
-    ResetPasswordConfirm,
-    ResetPasswordRequestCode,
-    UpdatePassword,
-)
-from accounts.views.profile import (
-    ListProfile,
-    ListProfiles,
-    ProfileDetail,
-    UserProfileContactListView,
-)
+from accounts.views.password import (ResetPasswordConfirm,
+                                     ResetPasswordRequestCode, UpdatePassword)
+from accounts.views.profile import (ListProfile, ListProfiles, ProfileDetail,
+                                    UserProfileContactListView)
 
 app_name = "accounts"
 

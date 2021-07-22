@@ -1,17 +1,12 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from cart.views.cart import CartItemViewSet, CartItemQuantityUpdateView
-from cart.views.kot import OrderKotViewSet, KotListView, GeneratePostKotView
-from cart.views.order import (
-    DoneFromCustomerView,
-    InitializeOrder,
-    OrderViewSet,
-    OrderWithCartItemsList,
-    OrderWithCartListView,
-    PartialUpdateOrderView,
-    UserOrders,
-)
+from cart.views.cart import CartItemQuantityUpdateView, CartItemViewSet
+from cart.views.kot import GeneratePostKotView, KotListView, OrderKotViewSet
+from cart.views.order import (DoneFromCustomerView, InitializeOrder,
+                              OrderViewSet, OrderWithCartItemsList,
+                              OrderWithCartListView, PartialUpdateOrderView,
+                              UserOrders)
 from cart.views.report import SalesReportListView, StorySummaryDetailView
 
 router = DefaultRouter()

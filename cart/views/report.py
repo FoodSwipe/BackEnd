@@ -10,11 +10,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cart.models import CartItem, MonthlySalesReport, Order
-from cart.serializers.report import (
-    RecentLocationsSerializer,
-    SalesReportSerializer,
-    UserTopItemsSerializer,
-)
+from cart.serializers.report import (RecentLocationsSerializer,
+                                     SalesReportSerializer,
+                                     UserTopItemsSerializer)
 from item.models import MenuItem
 from utils.helper import generate_url_for_media_resources
 

@@ -44,7 +44,7 @@ class HomePageContentAdmin(admin.ModelAdmin):
                     "button_text",
                     "button_icon",
                     "button_to",
-                    "image"
+                    "image",
                 ),
             },
         ),

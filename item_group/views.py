@@ -5,11 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from item_group.models import MenuItemGroup
-from item_group.serializers import (
-    ItemGroupSerializer,
-    MenuItemGroupPOSTSerializer,
-    MenuItemGroupSerializer,
-)
+from item_group.serializers import (ItemGroupSerializer,
+                                    MenuItemGroupPOSTSerializer,
+                                    MenuItemGroupSerializer)
 from log.models import Log
 
 

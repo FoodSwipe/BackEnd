@@ -1,4 +1,4 @@
-from django_filters import FilterSet, DateTimeFromToRangeFilter
+from django_filters import DateTimeFromToRangeFilter, FilterSet
 
 from cart.models import Order
 

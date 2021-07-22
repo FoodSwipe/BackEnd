@@ -2,15 +2,10 @@ import os
 
 from django.utils import timezone
 
-from backend.settings import (
-    DELIVERY_CHARGE,
-    DELIVERY_START_AM,
-    DELIVERY_START_PM,
-    LOYALTY_10_PER_FROM,
-    LOYALTY_12_PER_FROM,
-    LOYALTY_13_PER_FROM,
-    LOYALTY_15_PER_FROM,
-)
+from backend.settings import (DELIVERY_CHARGE, DELIVERY_START_AM,
+                              DELIVERY_START_PM, LOYALTY_10_PER_FROM,
+                              LOYALTY_12_PER_FROM, LOYALTY_13_PER_FROM,
+                              LOYALTY_15_PER_FROM)
 
 
 def generate_url_for_media_resources_in_object(serializer, object_name=None):

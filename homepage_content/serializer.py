@@ -1,7 +1,8 @@
 from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
 
-from backend.settings import ALLOWED_IMAGES_EXTENSIONS, HOMEPAGE_CONTENT_IMAGE_MAX_SIZE
+from backend.settings import (ALLOWED_IMAGES_EXTENSIONS,
+                              HOMEPAGE_CONTENT_IMAGE_MAX_SIZE)
 from homepage_content.models import HomePageContent
 from utils.file import check_size
 

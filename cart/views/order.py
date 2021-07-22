@@ -9,13 +9,10 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from cart.filters import OrderFilter
-from cart.models import Order, OrderKOT, CartItem
-from cart.serializers.order import (
-    OrderCreateSerializer,
-    OrderPOSTSerializer,
-    OrderSerializer,
-    OrderWithCartListSerializer,
-)
+from cart.models import CartItem, Order, OrderKOT
+from cart.serializers.order import (OrderCreateSerializer, OrderPOSTSerializer,
+                                    OrderSerializer,
+                                    OrderWithCartListSerializer)
 from log.models import Log
 
 

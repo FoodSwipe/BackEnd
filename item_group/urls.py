@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from item_group.views import MenuItemGroupsWithItemListView, MenuItemGroupViewSet
+from item_group.views import (MenuItemGroupsWithItemListView,
+                              MenuItemGroupViewSet)
 
 router = DefaultRouter()
 router.register("menu-item-group", MenuItemGroupViewSet, basename="menu-item-group")

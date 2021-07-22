@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from homepage_content.views import HomePageContentListView, HomepageContentViewSet
+from homepage_content.views import (HomePageContentListView,
+                                    HomepageContentViewSet)
 
 router = DefaultRouter()
 router.register(

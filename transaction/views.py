@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from transaction.models import Transaction
-from transaction.serializers import TransactionPOSTSerializer, TransactionSerializer
+from transaction.serializers import (TransactionPOSTSerializer,
+                                     TransactionSerializer)
 
 
 class TransactionViewSet(viewsets.ModelViewSet):

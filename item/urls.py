@@ -1,14 +1,9 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from item.views import (
-    ItemTypeViewSet,
-    MenuItemViewSet,
-    OrderNowItemsListView,
-    RecommendedItemsListView,
-    TopItemsListView,
-    TopRecommendedMenuItemViewSet,
-)
+from item.views import (ItemTypeViewSet, MenuItemViewSet,
+                        OrderNowItemsListView, RecommendedItemsListView,
+                        TopItemsListView, TopRecommendedMenuItemViewSet)
 
 router = DefaultRouter()
 router.register("item-type", ItemTypeViewSet, basename="menu-item-type")
