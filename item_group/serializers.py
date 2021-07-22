@@ -70,7 +70,7 @@ class MenuItemGroupPOSTSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
         Log.objects.create(
-            mode="delete",
+            mode="create",
             actor=validated_data["created_by"],
             detail="New menu item group added. ({})".format(validated_data["name"]),
         )
