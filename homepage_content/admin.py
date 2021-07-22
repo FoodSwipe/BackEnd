@@ -44,6 +44,7 @@ class HomePageContentAdmin(admin.ModelAdmin):
                     "button_text",
                     "button_icon",
                     "button_to",
+                    "image"
                 ),
             },
         ),
@@ -52,8 +53,6 @@ class HomePageContentAdmin(admin.ModelAdmin):
     list_per_page = 10
 
     def save_model(self, request, obj, form, change):
-        print(obj.image)
-        print(form.image)
         if "image" in form.changed_data:
             obj.image.delete()
 

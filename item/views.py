@@ -48,6 +48,7 @@ class ItemTypeViewSet(viewsets.ModelViewSet):
     serializer_class = ItemTypeSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAdminUser]
+    search_fields = ["name"]
 
     def destroy(self, request, *args, **kwargs):
         item_type = self.get_object()
