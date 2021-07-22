@@ -1,14 +1,10 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django_filters import rest_framework as filters
 
 
-from item.filters import MenuItemFilter
 from item.models import ItemType, MenuItem, TopAndRecommendedItem
 from item.serializers import (
     ItemTypeSerializer,
@@ -24,8 +20,8 @@ from log.models import Log
 class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all().order_by("created_at")
     serializer_class = MenuItemSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = MenuItemFilter
+    filterset_fields = ["is_veg", "item_type", "is_bar_item", "menu_item_group"]
+    search_fields = ["name", "ingredients", "menu_item_group__name"]
 
     def get_serializer_class(self):
         if self.action == "create" or self.action == "update":
