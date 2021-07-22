@@ -2,6 +2,14 @@ SHELL=/bin/bash
 PYTHON=python3.8
 PIP=pip
 
+ADMIN_EMAIL := admin@test.com
+ADMIN_USERNAME := admin
+ADMIN_PASSWORD := admin
+
+
+create-admin:
+	DJANGO_SUPERUSER_PASSWORD=$(ADMIN_PASSWORD) $(PYTHON) manage.py createsuperuser --username $(ADMIN_USERNAME) --email $(ADMIN_EMAIL) --noinput
+
 create-env:
 	$(PYTHON) -m venv venv
 	echo "RUN: source/venv/activate to activate recently created environment."
@@ -25,10 +33,24 @@ clean-db:
 	rm -rf db.sqlite3
 
 clean-migrations:
-	echo "Cleaning Migrations..."
 	rm -rf **/migrations
 
+load-fresh-migrations:
+	make clean-migrations
+	make make-migrations APP=accounts
+	make migrate
+	make make-migrations APP=item
+	make make-migrations APP=item_group
+	make make-migrations APP=reviews
+	make make-migrations APP=cart
+	make make-migrations APP=transaction
+	make make-migrations APP=homepage_content
+	make make-migrations APP=log
+	make migrate
+
 clean-db-with-migration: clean-db clean-migrations
+
+super-fresh: clean-db-with-migration load-fresh-migrations create-admin
 
 clean-env:
 	rm -rf venv
@@ -53,5 +75,12 @@ isort:
 pylint:
 	DJANGO_SETTINGS_MODULE=backend.settings pylint --load-plugins pylint_django accounts
 
+isort:
+	isort .
+
 black:
-	black accounts backend cart homepage_content item item_group log reviews transaction utils manage.py passenger_wsgi.py
+	black .
+
+lint:
+	black .
+	isort .
