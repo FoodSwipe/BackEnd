@@ -19,7 +19,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     search_fields = ["name", "ingredients", "menu_item_group__name"]
 
     def get_serializer_class(self):
-        if self.action == "create" or self.action == "update":
+        if self.action == "create" or self.action == "update" or self.action == 'partial_update':
             return MenuItemPOSTSerializer
         return super(MenuItemViewSet, self).get_serializer_class()
 
