@@ -139,3 +139,5 @@ static/
 # Server
 public/
 tmp/
+logs/
+passenger_wsgi.py
