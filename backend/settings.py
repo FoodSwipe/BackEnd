@@ -30,11 +30,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "http://localhost:8000"
+    "http://api.foodswipe.com.np",
+    "https://api.foodswipe.com.np",
+]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://foodswipe.com.np",
+    "https://foodswipe.com.np",
+    "http://foodswipe.com.np"
 ]
 
 # Application definition
@@ -165,11 +170,21 @@ TIME_ZONE = os.getenv("TIME_ZONE")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_DIR = (
+    os.getenv("STATIC_ABSOLUTE_DIR")
+    if os.getenv("ENV") == "PRODUCTION"
+    else os.path.join(BASE_DIR, "static/")
+)
+STATIC_ROOT = STATIC_DIR
 
 # Media files
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
+MEDIA_DIR = (
+    os.getenv("MEDIA_ABSOLUTE_DIR")
+    if os.getenv("ENV") == "PRODUCTION"
+    else os.path.join(BASE_DIR, "media/")
+)
+MEDIA_ROOT = MEDIA_DIR
 
 # DJANGO PHONE NUMBER FIELD
 PHONENUMBER_DB_FORMAT = "NATIONAL"
