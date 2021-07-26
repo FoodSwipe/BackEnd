@@ -61,7 +61,7 @@ class OrderNowItemsListView(APIView):
     permission_classes = ()
 
     def get(self, request):
-        menu_items = MenuItem.objects.all().order_by("name")
+        menu_items = MenuItem.objects.order_by("name")
         serializer = OrderNowListSerializer(
             instance=menu_items, many=True, context={"request": request}
         )
