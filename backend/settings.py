@@ -28,12 +28,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    "http://localhost:8000"
-    "http://api.foodswipe.com.np",
-    "https://api.foodswipe.com.np",
+    "localhost",
+    "api.foodswipe.com.np",
 ]
 
 CORS_ALLOWED_ORIGINS = [
