@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +7,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
-from cart.filters import OrderFilter
 from cart.models import CartItem, Order, OrderKOT
 from cart.serializers.order import (OrderCreateSerializer, OrderPOSTSerializer,
                                     OrderSerializer,
@@ -85,8 +83,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = OrderFilter
+    filterset_fields = ["delivery_started", "is_delivered", "done_from_customer"]
+    search_fields = ["custom_location", "custom_contact", "custom_email", "created_by__username", "updated_at"]
 
     def get_serializer_class(self):
         if self.action in ["create", "partial_update", "update"]:
