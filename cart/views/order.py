@@ -80,7 +80,7 @@ class InitializeOrder(APIView):
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderWithCartListSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     filterset_fields = ["delivery_started", "is_delivered", "done_from_customer"]
