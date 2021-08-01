@@ -8,8 +8,8 @@ PAYMENT_CHOICES = [("Cash", "Cash")]
 
 
 class Order(models.Model):
-    custom_location = models.CharField(max_length=512)
-    custom_contact = PhoneNumberField()
+    custom_location = models.CharField(max_length=512, null=True, blank=True)
+    custom_contact = PhoneNumberField(null=True, blank=True)
     custom_email = models.EmailField(null=True)
     total_price = models.DecimalField(
         default=0, decimal_places=2, max_digits=8, editable=False

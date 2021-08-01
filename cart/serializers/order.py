@@ -28,14 +28,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             "done_from_customer",
         ]
 
-    def get_fields(self, *args, **kwargs):
-        fields = super(OrderCreateSerializer, self).get_fields()
-        request = self.context.get("request", None)
-        if request and isinstance(request.user, AnonymousUser):
-            fields["custom_location"].required = True
-            fields["custom_contact"].required = True
-        return fields
-
     def create(self, validated_data):
         creator = self.context["request"].user
         custom_contact = validated_data.get("custom_contact")
