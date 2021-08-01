@@ -19,8 +19,14 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         cart_item = self.get_object()
+        print(cart_item.order.id)
         cart_item.order.total_items -= cart_item.quantity
         cart_item.order.total_price -= cart_item.quantity * cart_item.item.price
+
+        if cart_item.order.total_items < 0:
+            cart_item.order.total_items = 0
+        if cart_item.order.total_price < 0:
+            cart_item.order.total_price = 0
         cart_item.order.save()
         cart_item.delete()
         return Response(
