@@ -44,6 +44,7 @@ class MenuItemGroup(models.Model):
     class Meta:
         verbose_name = "Menu Item Group"
         verbose_name_plural = "Menu Item Groups"
+        ordering = ['-updated_at']
 
     def __str__(self):
         return self.name

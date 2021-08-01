@@ -47,6 +47,9 @@ class Order(models.Model):
     def __str__(self):
         return "Order #{} -- {}".format(self.pk, self.created_by)
 
+    class Meta:
+        ordering = ["-updated_at"]
+
 
 class CartItem(models.Model):
     order = models.ForeignKey(
@@ -77,6 +80,9 @@ class CartItem(models.Model):
     def __str__(self):
         return self.item.name
 
+    class Meta:
+        ordering = ["-updated_at"]
+
 
 class MonthlySalesReport(models.Model):
     menu_item = models.ForeignKey(
@@ -104,3 +110,4 @@ class OrderKOT(models.Model):
         unique_together = [["order", "cart_item", "batch"]]
         verbose_name = "Order KOT"
         verbose_name_plural = "Order KOTs"
+        ordering = ["-timestamp"]

@@ -19,5 +19,8 @@ class Transaction(models.Model):
         on_delete=models.DO_NOTHING,
     )
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return "{} -- Transaction #{}".format(self.order.created_by, self.pk)

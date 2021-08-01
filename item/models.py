@@ -33,10 +33,12 @@ class ItemType(models.Model):
         validators=[FileExtensionValidator(ALLOWED_IMAGES_EXTENSIONS)],
         help_text="Add badge image for this type of item.",
     )
+    timestamp = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         verbose_name = "Item Type"
         verbose_name_plural = "Item Types"
+        ordering = ["-timestamp"]
 
     def __str__(self):
         return self.name
@@ -140,6 +142,7 @@ class MenuItem(Item):
     class Meta:
         verbose_name = "Menu Item"
         verbose_name_plural = "Menu Items"
+        ordering = ["-updated_at"]
 
     def __str__(self):
         return self.name
@@ -151,6 +154,7 @@ class TopAndRecommendedItem(models.Model):
     )
     top = models.BooleanField(default=False)
     recommended = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now=True, editable=False)
 
     def __str__(self):
         return self.menu_item.name
@@ -158,6 +162,7 @@ class TopAndRecommendedItem(models.Model):
     class Meta:
         verbose_name = "Top and Recommended Item"
         verbose_name_plural = "Top and Recommended Items"
+        ordering = ["-timestamp"]
 
 
 @receiver(post_save, sender=MenuItem)

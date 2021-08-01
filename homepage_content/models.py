@@ -27,6 +27,9 @@ class HomePageContent(models.Model):
     button_to = models.CharField(max_length=64)
     created_at = models.DateField(auto_now=True, editable=False)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.button_text
 
