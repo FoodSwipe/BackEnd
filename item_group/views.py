@@ -15,8 +15,14 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
     queryset = MenuItemGroup.objects.all()
     serializer_class = MenuItemGroupSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
     search_fields = ["name"]
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         if self.action == "create" or self.action == "update":

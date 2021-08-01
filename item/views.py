@@ -41,9 +41,14 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 class ItemTypeViewSet(viewsets.ModelViewSet):
     queryset = ItemType.objects.all().order_by("id")
     serializer_class = ItemTypeSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAdminUser]
     search_fields = ["name"]
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = []
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     def destroy(self, request, *args, **kwargs):
         item_type = self.get_object()
