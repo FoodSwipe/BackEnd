@@ -31,14 +31,14 @@ class Order(models.Model):
     )
     created_by = models.ForeignKey(
         get_user_model(),
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="OrderCreator",
         null=True,
         blank=True,
     )
     updated_by = models.ForeignKey(
         get_user_model(),
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name="OrderUpdater",
         null=True,
         blank=True,
@@ -64,7 +64,7 @@ class CartItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     created_by = models.ForeignKey(
         get_user_model(),
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         editable=False,
         related_name="CartItemCreator",
         null=True,

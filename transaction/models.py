@@ -16,7 +16,7 @@ class Transaction(models.Model):
         get_user_model(),
         editable=False,
         related_name="TransactionCreator",
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
