@@ -74,16 +74,7 @@ class OrderPOSTSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data["created_by"] = self.context["request"].user
-        order = Order.objects.create(**validated_data)
-        cart_items = CartItem.objects.filter(order=order)
-        for cart_item in cart_items:
-            OrderKOT.objects.create(
-                order=order,
-                cart_item=cart_item,
-                batch=1,
-                quantity_diff=cart_item.quantity,
-            )
-        return order
+        return Order.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         is_delivery_started = validated_data.get(
