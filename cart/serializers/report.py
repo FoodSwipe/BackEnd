@@ -9,6 +9,7 @@ class RecentLocationsSerializer(serializers.Serializer):
 
 
 class UserTopItemsSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=None)
     image = serializers.CharField(max_length=None)
     count = serializers.IntegerField()
 

@@ -24,9 +24,10 @@ class RecentLocation:
 
 
 class TopItem:
-    def __init__(self, image, count):
-        self.image = (image,)
+    def __init__(self, image, count, name):
+        self.image = image
         self.count = count
+        self.name = name
 
 
 def get_reverse_sorted_dict(not_sorted_dict):
@@ -61,8 +62,7 @@ def get_top_items_of_user(cart_items):
 
     for itemId, count in top_six_items_dict.items():
         item = MenuItem.objects.get(pk=itemId)
-        top_item = TopItem(image=item.image.url, count=count)
-        top_item.image = top_item.image[0]
+        top_item = TopItem(image=item.image.url, count=count, name=item.name)
         top_items.append(top_item)
 
     return top_items
