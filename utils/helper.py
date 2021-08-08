@@ -28,7 +28,7 @@ def generate_url_for_media_resources_in_object(serializer, object_name=None):
 
 def generate_url_for_media_resources(serializer, param="image"):
     for target in serializer.data:
-        front = "http" if os.getenv("IS_SECURE") else "https"
+        front = "https" if os.getenv("IS_SECURE") else "http"
         if target[param]:
             target[param] = "{}://{}{}".format(
                 front, os.getenv("BASE_URL"), target[param]
