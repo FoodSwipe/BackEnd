@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -19,7 +20,6 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         cart_item = self.get_object()
-        print(cart_item.order.id)
         cart_item.order.total_items -= cart_item.quantity
         cart_item.order.total_price -= cart_item.quantity * cart_item.item.price
 
@@ -77,17 +77,7 @@ class CartItemQuantityUpdateView(APIView):
             context={"request": request},
         )
         if serializer.is_valid():
-            updated_cart_item = serializer.save()
-            item_order_kots = OrderKOT.objects.filter(
-                order=updated_cart_item.order, cart_item__item=updated_cart_item.item
-            )
-            last_batch = self.get_last_batch(item_order_kots)
-            OrderKOT.objects.create(
-                order=updated_cart_item.order,
-                cart_item=updated_cart_item,
-                batch=last_batch + 1,
-                quantity_diff=(updated_cart_item.quantity - previous_quantity),
-            )
+            serializer.save()
             return Response(
                 {
                     "detail": "Cart item quantity updated successfully.",
