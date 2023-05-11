@@ -28,7 +28,7 @@ class HomePageContent(models.Model):
     created_at = models.DateField(auto_now=True, editable=False)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.button_text

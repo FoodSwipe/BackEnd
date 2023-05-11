@@ -14,7 +14,6 @@ from cart.serializers.report import (RecentLocationsSerializer,
                                      SalesReportSerializer,
                                      UserTopItemsSerializer)
 from item.models import MenuItem
-from utils.helper import generate_url_for_media_resources
 
 
 class RecentLocation:
@@ -118,7 +117,6 @@ class StorySummaryDetailView(APIView):
                 read_only=True,
                 context={"request": request},
             )
-            top_items = generate_url_for_media_resources(top_items)
 
             completed_orders = Order.objects.filter(created_by=user, is_delivered=True)
             most_recent_locations = get_most_recent_locations_of_user(completed_orders)

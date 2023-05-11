@@ -42,7 +42,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        ordering = ['-updated_at']
+        ordering = ["-updated_at"]
 
     def __str__(self):
         return str(self.reviewer_contact)

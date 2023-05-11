@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cart.models import Order, OrderKOT, CartItem
+from cart.models import CartItem, Order, OrderKOT
 from cart.serializers.kot import KOTPOSTSerializer, KOTSerializer
 
 
@@ -30,7 +30,9 @@ class InitFirstBatchKot(APIView):
         order = get_object_or_404(Order, pk=pk)
         order_kots = OrderKOT.objects.filter(order=order)
         if len(order_kots) > 0:
-            return Response("Kot is already initialized.", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                "Kot is already initialized.", status=status.HTTP_400_BAD_REQUEST
+            )
         else:
             cart_items = CartItem.objects.filter(order=order)
             for cart_item in cart_items:
@@ -40,7 +42,9 @@ class InitFirstBatchKot(APIView):
                     batch=1,
                     quantity_diff=cart_item.quantity,
                 )
-            return Response("First batch kot initialized.", status=status.HTTP_201_CREATED)
+            return Response(
+                "First batch kot initialized.", status=status.HTTP_201_CREATED
+            )
 
 
 class KotListView(ListAPIView):
@@ -101,7 +105,7 @@ class GeneratePostKotView(APIView):
                         order=order,
                         cart_item=cart_item,
                         quantity_diff=diff,
-                        batch=latest_batch + 1
+                        batch=latest_batch + 1,
                     )
             except KeyError:
                 # kot not made yet for the item
@@ -110,8 +114,6 @@ class GeneratePostKotView(APIView):
                     order=order,
                     cart_item=cart_item,
                     quantity_diff=cart_item.quantity,
-                    batch=latest_batch + 1
+                    batch=latest_batch + 1,
                 )
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-

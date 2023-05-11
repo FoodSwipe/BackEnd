@@ -27,4 +27,4 @@ class Log(models.Model):
         return "({}) {}".format(self.mode, self.actor.username)
 
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ["-timestamp"]

@@ -18,7 +18,7 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
     search_fields = ["name"]
 
     def get_permissions(self):
-        if self.action == 'list':
+        if self.action == "list":
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated]

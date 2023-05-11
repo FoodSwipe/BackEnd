@@ -83,8 +83,19 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderWithCartListSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    filterset_fields = ["delivery_started", "is_delivered", "done_from_customer", "custom_contact"]
-    search_fields = ["custom_location", "custom_contact", "custom_email", "created_by__username", "updated_at"]
+    filterset_fields = [
+        "delivery_started",
+        "is_delivered",
+        "done_from_customer",
+        "custom_contact",
+    ]
+    search_fields = [
+        "custom_location",
+        "custom_contact",
+        "custom_email",
+        "created_by__username",
+        "updated_at",
+    ]
 
     def get_serializer_class(self):
         if self.action in ["create", "partial_update", "update"]:

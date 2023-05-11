@@ -10,7 +10,6 @@ from accounts.models import Profile
 from accounts.serializers.profile import (ProfileContactOnlySerializer,
                                           ProfilePOSTSerializer,
                                           ProfileSerializer)
-from utils.helper import generate_url_for_media_resources
 
 
 class ListProfiles(APIView):
@@ -20,8 +19,9 @@ class ListProfiles(APIView):
     @staticmethod
     def get(request):
         profiles = Profile.objects.all()
-        serializer = ProfileSerializer(profiles, many=True)
-        serializer = generate_url_for_media_resources(serializer)
+        serializer = ProfileSerializer(
+            profiles, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
