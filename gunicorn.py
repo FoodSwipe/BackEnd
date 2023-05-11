@@ -1,7 +1,7 @@
 workers = 4
 max_requests = 1000
 timeout = 30
-bind = "0.0.0.0:8001"
+bind = "0.0.0.0:8002"
 preload_app = True
-accesslog = "/var/log/gunicorn/foodswipe/access.log"
-errorlog = "/var/log/gunicorn/foodswipe/error.log"
+accesslog = "/home/ubuntu/dev/foodswipe/BackEnd/logs/gunicorn/access.log"
+errorlog = "/home/ubuntu/dev/foodswipe/BackEnd/logs/gunicorn/error.log"
