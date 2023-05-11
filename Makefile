@@ -1,5 +1,5 @@
 SHELL=/bin/bash
-PYTHON=python3.8
+PYTHON=python
 PIP=pip
 
 ADMIN_EMAIL := admin@test.com
