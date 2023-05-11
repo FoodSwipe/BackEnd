@@ -26,6 +26,10 @@ migrate:
 serve:
 	$(PYTHON) manage.py runserver
 
+.PHONY: prod
+prod:
+	gunicorn backend.wsgi:application --config gunicorn.py
+
 createsuperuser:
 	$(PYTHON) manage.py createsuperuser
 
